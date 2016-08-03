@@ -20,9 +20,10 @@ class Messenger {
 
         pageEntry.messaging.forEach((event) => {
           if (event.message) {
-            receivedAuthentication(event)
-          } else if (event.optin) {
+            //TODO: is_echo (Message with text message, with image, audio, video or file attachment, with fallback attachment, with template attachment)
             receivedMessage(event)
+          } else if (event.optin) {
+            receivedAuthentication(event)
           } else if (event.delivery) {
             receivedDeliveryConfirmation(event)
           } else if (event.postback) {
@@ -32,11 +33,12 @@ class Messenger {
           } else {
             console.log('Webhook received an unknown messaging event: ', event)
           }
+          // TODO: Account linking
         })
       })
     }
   }
-  
+
   /*
    * Authorization Event
    *
