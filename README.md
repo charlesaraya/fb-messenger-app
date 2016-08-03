@@ -1,7 +1,7 @@
 # Facebook Messenger Platform App
 
 #### NodeJS API adapter
-
+[![npm](https://img.shields.io/npm/v/npm.svg)](https://www.npmjs.com/package/fb-messenger-app) [![npm](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE) 
 ## Installation
 
 ```bash
