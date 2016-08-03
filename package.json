@@ -1,17 +1,27 @@
 {
-  "name": "jincanabot",
+  "name": "fb-messenger-app",
   "version": "1.0.0",
-  "description": "TestBot Server App for Messenger Platform",
+  "description": "NodeJS API adapter for Messenger Platform",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
   },
+  "keywords": [
+    "facebook",
+    "messenger",
+    "platform",
+    "chatbot",
+    "bot",
+    "fb"
+  ],
   "author": "Carlos Araya",
   "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.15.0",
-    "express": "^4.13.4",
     "request": "^2.72.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/charlesaraya/fb-messenger-app.git"
   }
 }
