@@ -4,10 +4,6 @@
 ```bash
 npm install fb-messenger-app
 ```
-
-1. require fb-messenger-app
-2. create an instance
-
 ## API
 ##### Constructor
 ```js
