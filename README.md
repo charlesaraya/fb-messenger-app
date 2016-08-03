@@ -1,17 +1,25 @@
-# node-fb-messenger 
-#### NodeJS API adapter for Messenger Platform
+# Facebook Messenger Platform App
+
+#### NodeJS API adapter
+
 ## Installation
+
 ```bash
 npm install fb-messenger-app
 ```
+
 ## API
+
 ##### Constructor
+
 ```js
 var MessengerApp = require('fb-messenger-app')
 var messenger = new MessengerApp(token[, notificationType])
 ```
 _token_ must be your page token.
+
 ##### Functions
+
 ```js
 messenger.sendTextMessage(id, stringMessage[, notificationType][, cb])
 
@@ -57,35 +65,55 @@ messenger.sendThreadSettingsRequest([cb])
 
 messenger.getUserProfile(userId[, cb])
 ```
+
 #### Notification Types
+
 Notification Types are optional; by default, messages will be _REGULAR_ push notification type
  - REGULAR : will emit a sound/vibration and a phone notification
  - SILENT_PUSH : will just emit a phone notification
  - NO_PUSH : will not emit either
 
 #### Sender Actions
+
 Set typing indicators or send read receipts.
 - mark_seen : Mark last message as read
 - typing_on : Turn typing indicators on
 - typing_off : Turn typing indicators off
+
 ## Examples
+
 ### Basic Example
+
 ```js
 TODO
 ```
+
 ### Callback Example
+
 ```js
 TODO
 ```
+
 ### No push Example
+
 ```js
 TODO
 ```
+
 ### Default to silent push Example
+
 ```js
 TODO
 ```
+
 ### Complete Example
+
 ```js
 TODO
 ```
+
+## License
+
+### Code
+
+[MIT License](https://github.com/charlesaraya/fb-messenger-app/blob/master/LICENSE).
