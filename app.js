@@ -123,7 +123,7 @@ class Messenger {
     var message = {
       text: text
     }
-    sendMessage(recipientId, message, notificationType, cb)
+    sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
@@ -139,7 +139,7 @@ class Messenger {
         }
       }
     }
-    sendMessage(recipientId, message, notificationType, cb)
+    sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
@@ -155,7 +155,7 @@ class Messenger {
         }
       }
     }
-    sendMessage(recipientId, message, notificationType, cb)
+    sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
@@ -171,7 +171,7 @@ class Messenger {
         }
       }
     }
-    sendMessage(recipientId, message, notificationType, cb)
+    sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
@@ -187,7 +187,7 @@ class Messenger {
         }
       }
     }
-    sendMessage(recipientId, message, notificationType, cb)
+    sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
@@ -205,7 +205,7 @@ class Messenger {
         }
       }
     }
-    sendMessage(recipientId, message, notificationType, cb)
+    sendApiMessage(recipientId, message, notificationType, cb)
    }
 
   /*
@@ -225,7 +225,7 @@ class Messenger {
         }
       }
     }
-    sendMessage(recipientId, message, notificationType, cb)
+    sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
@@ -251,7 +251,7 @@ class Messenger {
         }
       }
     }
-    sendMessage(recipientId, message, notificationType, cb)
+    sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
@@ -263,7 +263,7 @@ class Messenger {
       text: quickReplies.text,
       quick_replies: quickReplies.quick_replies
     }
-    sendMessage(recipientId, message, notificationType, cb)
+    sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
@@ -277,21 +277,21 @@ class Messenger {
         payload: itinerary
       }
     }
-    sendMessage(recipientId, message, notificationType, cb)
+    sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
    * Send an airplane check-in reminder message
    *
    */
-  sendCheckinMessage(recipientId, checkIn, notificationType, cb) {
+  sendCheckinMessage(recipientId, checkin, notificationType, cb) {
     var message = {
       attachment: {
         type: 'template',
-        payload: checkIn
+        payload: checkin
       }
     }
-    sendMessage(recipientId, message, notificationType, cb)
+    sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
@@ -305,7 +305,7 @@ class Messenger {
         payload: boardingpass
       }
     }
-    sendMessage(recipientId, message, notificationType, cb)
+    sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
@@ -319,14 +319,17 @@ class Messenger {
         payload: flightupdate
       }
     }
-    sendMessage(recipientId, message, notificationType, cb)
+    sendApiMessage(recipientId, message, notificationType, cb)
   }
+
+  // TODO: Phone Number
+  //You can send a message to a user without requiring the user interacting with the page first, by specifying a phone_number. Requires the pages_messaging_phone_number permission. read more at https://developers.facebook.com/docs/messenger-platform/send-api-reference#phone_number
 
   /*
    * Send a message to a user.
    *
    */
-  sendMessage(recipientId, message, notificationType, cb) {
+  sendApiMessage(recipientId, message, notificationType, cb) {
     if (typeof notificationType === 'function') {
       cb = notificationType
       notificationType = NOTIFICATION_TYPE
@@ -423,12 +426,12 @@ class Messenger {
    * Set a Persistent Menu
    * 
    */
-  setPersistentMenu(menuItems, cb) {
+  setPersistentMenu(items, cb) {
     var method = 'POST'
     var params =  {
       setting_type: 'call_to_actions',
       thread_state: 'existing_thread',
-      call_to_actions : menuItems
+      call_to_actions : items
     }
     sendThreadSettingsRequest(method, params, cb)
   }
@@ -490,6 +493,9 @@ class Messenger {
       cb(null, response.body)
     })
   }
+
+  //TODO: Send API request fails
+  //Internal Errors, Rate Limited Errors, Bad Parameter Errors, Access Token Errors, Permission Errors, User Block Errors, Account Linking Errors. read more at https://developers.facebook.com/docs/messenger-platform/send-api-reference#errors
 }
 
 export default Messenger
