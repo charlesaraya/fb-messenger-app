@@ -8,28 +8,104 @@ class Messenger {
   }
 
   /*
-   * Messange event dispatcher
+   * Authorization Event
+   *
    */
-  messageDispatcher(data, cb) {
-    // Check that this is a page subscription
-    if (data.object == 'page') {
+  receivedAuthentication (event) {
+    var sender = event.sender.id
+    var recipient = event.recipient.id
+    var timeOfAuth = event.timestamp
+    var passThroughParam = event.optin.ref
 
+    console.log('Authentication received for user %d and page %d with pass ' +
+      "through param '%s' at %d", sender, recipient, passThroughParam, timeOfAuth)
+  }
+
+  /*
+   * Received Message Event
+   *
+   */
+  receivedMessage (event) {
+    var sender = event.sender.id
+    var recipient = event.recipient.id
+    var timeOfMessage = event.timestamp
+    var message = event.message
+
+    console.log('Received Message from user %d and page %d at %d with message: ',
+      sender, recipient, timeOfMessage, message)
+  }
+
+  /*
+   * Delivery Confirmation Event
+   *
+   */
+  receivedDeliveryConfirmation (event) {
+    var sender = event.sender.id
+    var recipient = event.recipient.id
+    var messages = event.delivery.mids
+    var watermark = event.delivery.watermark
+    var sequence = event.delivery.seq
+
+    if (messages) {
+      messages.forEach((message) => {
+        console.log('Received delivery confirmation from user %d and page %d for message ID: %s and sequence #%d', sender, recipient, message, sequence)
+      })
+    }
+    console.log('All messages before %d were delivered', watermark)
+  }
+
+  /*
+   * Postback Event
+   *
+   */
+  receivedPostback (event) {
+    var sender = event.sender.id
+    var recipient = event.recipient.id
+    var timeOfPostback = event.timestamp
+    var payload = event.postback.payload
+
+    console.log("Received postback for user %d and page %d with payload '%s' at %d", sender, recipient, payload, timeOfPostback)
+  }
+
+  /*
+   * Message Read Event
+   *
+   */
+  receivedReadConfirmation (event) {
+    var sender = event.sender.id
+    var recipient = event.recipient.id
+    var timeOfRead = event.timestamp
+    var watermark = event.read.watermark
+    var sequence = event.read.seq
+
+    console.log('%d-$d: All Messages were read from user %d and page %d before %d', timeOfRead, sequence, sender, recipient, watermark)
+  }
+
+  /*
+   * Messange event dispatcher
+   *
+   */
+  messageDispatcher (data, cb) {
+    // Check that this is a page subscription
+    if (data.object === 'page') {
       data.entry.forEach((pageEntry) => {
         var pageId = pageEntry.id
         var timeOfEvent = pageEntry.time
 
+        console.log('New message event from page %d at %d', pageId, timeOfEvent)
+
         pageEntry.messaging.forEach((event) => {
           if (event.message) {
-            //TODO: is_echo (Message with text message, with image, audio, video or file attachment, with fallback attachment, with template attachment)
-            receivedMessage(event)
+            /* TODO: is_echo (Message with text message, with image, audio, video or file attachment, with fallback attachment, with template attachment) */
+            this.receivedMessage(event)
           } else if (event.optin) {
-            receivedAuthentication(event)
+            this.receivedAuthentication(event)
           } else if (event.delivery) {
-            receivedDeliveryConfirmation(event)
+            this.receivedDeliveryConfirmation(event)
           } else if (event.postback) {
-            receivedPostback(event)
+            this.receivedPostback(event)
           } else if (event.read) {
-            receivedReadConfirmation(event)
+            this.receivedReadConfirmation(event)
           } else {
             console.log('Webhook received an unknown messaging event: ', event)
           }
@@ -40,97 +116,21 @@ class Messenger {
   }
 
   /*
-   * Authorization Event
-   *
-   */
-  receivedAuthentication(event) {
-    var sender = event.sender.id
-    var recipient = event.recipient.id
-    var timeOfAuth = event.timestamp
-    var passThroughParam = event.optin.ref
-
-    console.log('Authentication received for user %d and page %d with pass ' + 
-      "through param '%s' at %d", sender, recipient, passThroughParam, timeOfAuth)
-  }
-
-  /*
-   * Received Message Event
-   *
-   */
-  receivedMessage(event) {
-    var sender = event.sender.id
-    var recipient =  event.recipient.id
-    var timeOfMessage = event.timestamp
-    var message = event.message
-
-    console.log('Received Message from user %d and page %d at %d with message: ', 
-      sender, recipient, timeOfMessage, message)
-  }
-
-  /*
-   * Delivery Confirmation Event
-   *
-   */
-  receivedDeliveryConfirmation(event) {
-    var sender = event.sender.id
-    var recipient = event.recipient.id
-    var messages = event.delivery.mids
-    var watermark = event.delivery.watermark
-    var sequence = event.delivery.seq
-
-    if (messages) {
-      messages.forEach((message) => {
-        console.log('Received delivery confirmation for message ID: %s', message)
-      })
-    }
-    console.log('All messages before %d were delivered', watermark)
-  }
-
-  /*
-   * Postback Event
-   *
-   */
-  receivedPostback(event) {
-    var sender = event.sender.id
-    var recipient = event.recipient.id
-    var timeOfPostback = event.timestamp
-    var payload = event.postback.payload
-
-    console.log("Received postback for user %d and page %d with payload '%s' at %d", 
-      sender, recipient, payload, timeOfPostback)
-  }
-
-  /*
-   * Message Read Event
-   *
-   */
-  receivedReadConfirmation(event) {
-    var sender = event.sender.id
-    var recipient = event.recipient.id
-    var timeOfRead = event.timestamp
-    var watermark = event.read.watermark
-    var sequence = event.read.seq
-
-    console.log('All Messages were read from user %d and page %d at %d', sender, 
-      recipient, timeOfRead)
-  }
-
-  /*
    * Send a plain text message
    *
    */
-  sendTextMessage(recipientId, text, notificationType, cb) {
+  sendTextMessage (recipientId, text, notificationType, cb) {
     var message = {
       text: text
     }
-    sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
    * Send an image (jpg, png and gifs)
    *
    */
-  sendImageMessage(recipientId, imgUrl, notificationType, cb) {
+  sendImageMessage (recipientId, imgUrl, notificationType, cb) {
     var message = {
       attachment: {
         type: 'image',
@@ -139,14 +139,14 @@ class Messenger {
         }
       }
     }
-    sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
    * Send an audio
    *
    */
-  sendAudioMessage(recipientId, audioUrl, notificationType, cb) {
+  sendAudioMessage (recipientId, audioUrl, notificationType, cb) {
     var message = {
       attachment: {
         type: 'audio',
@@ -155,14 +155,14 @@ class Messenger {
         }
       }
     }
-    sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
    * Send a video
    *
    */
-  sendVideoMessage(recipientId, videoUrl, notificationType, cb) {
+  sendVideoMessage (recipientId, videoUrl, notificationType, cb) {
     var message = {
       attachment: {
         type: 'video',
@@ -171,14 +171,14 @@ class Messenger {
         }
       }
     }
-    sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
    * Send a file
    *
    */
-  sendFileMessage(recipientId, fileUrl, notificationType, cb) {
+  sendFileMessage (recipientId, fileUrl, notificationType, cb) {
     var message = {
       attachment: {
         type: 'video',
@@ -187,14 +187,14 @@ class Messenger {
         }
       }
     }
-    sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
    * Send a button message
    *
    */
-   sendButtonMessage(recipientId, buttonTemplate, notificationType, cb) {
+  sendButtonMessage (recipientId, buttonTemplate, notificationType, cb) {
     var message = {
       attachment: {
         type: 'template',
@@ -205,17 +205,14 @@ class Messenger {
         }
       }
     }
-    sendApiMessage(recipientId, message, notificationType, cb)
-   }
+    this.sendApiMessage(recipientId, message, notificationType, cb)
+  }
 
   /*
    * Send a Structured Message
    *
    */
-  sendGenericMessage(recipientId, elements, notificationType, cb) {
-    if (typeof elements != 'array') {
-      elements = [elements]
-    }
+  sendGenericMessage (recipientId, elements, notificationType, cb) {
     var message = {
       attachment: {
         type: 'template',
@@ -225,14 +222,14 @@ class Messenger {
         }
       }
     }
-    sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
    * Send a receipt message
    *
    */
-  sendReceiptMessage(recipientId, receipt, notificationType, cb) {
+  sendReceiptMessage (recipientId, receipt, notificationType, cb) {
     var message = {
       attachment: {
         type: 'template',
@@ -251,88 +248,88 @@ class Messenger {
         }
       }
     }
-    sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
    * Send a quick reply message.
    *
    */
-  sendQuickMessage(recipientId, quickReplies, notificationType, cb) {
+  sendQuickMessage (recipientId, quickReplies, notificationType, cb) {
     var message = {
       text: quickReplies.text,
       quick_replies: quickReplies.quick_replies
     }
-    sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
    * Send an airplane itinerary message
    *
    */
-  sendItineraryMessage(recipientId, itinerary, notificationType, cb) {
+  sendItineraryMessage (recipientId, itinerary, notificationType, cb) {
     var message = {
       attachment: {
-        type: "template",
+        type: 'template',
         payload: itinerary
       }
     }
-    sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
    * Send an airplane check-in reminder message
    *
    */
-  sendCheckinMessage(recipientId, checkin, notificationType, cb) {
+  sendCheckinMessage (recipientId, checkin, notificationType, cb) {
     var message = {
       attachment: {
         type: 'template',
         payload: checkin
       }
     }
-    sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
    * Send an Airplane Boarding Pass message
    *
    */
-  sendBoardingpassMessage(recipientId, boardingpass, notificationType, cb) {
+  sendBoardingpassMessage (recipientId, boardingpass, notificationType, cb) {
     var message = {
       attachment: {
         type: 'template',
         payload: boardingpass
       }
     }
-    sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   /*
    * Send a flight update message
    *
    */
-  sendFlightupdateMessage(recipientId, flightupdate, notificationType, cb) {
+  sendFlightupdateMessage (recipientId, flightupdate, notificationType, cb) {
     var message = {
       attachment: {
         type: 'template',
         payload: flightupdate
       }
     }
-    sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipientId, message, notificationType, cb)
   }
 
   // TODO: Phone Number
-  //You can send a message to a user without requiring the user interacting with the page first, by specifying a phone_number. Requires the pages_messaging_phone_number permission. read more at https://developers.facebook.com/docs/messenger-platform/send-api-reference#phone_number
+  // You can send a message to a user without requiring the user interacting with the page first, by specifying a phone_number. Requires the pages_messaging_phone_number permission. read more at https://developers.facebook.com/docs/messenger-platform/send-api-reference#phone_number
 
   /*
    * Send a message to a user.
    *
    */
-  sendApiMessage(recipientId, message, notificationType, cb) {
+  sendApiMessage (recipientId, message, notificationType, cb) {
     if (typeof notificationType === 'function') {
       cb = notificationType
-      notificationType = NOTIFICATION_TYPE
+      notificationType = this.notificationType
     }
     const req = {
       url: 'https://graph.facebook.com/v2.6/me/messages',
@@ -355,7 +352,7 @@ class Messenger {
    * Send Sender Actions
    *
    */
-  sendSenderAction(recipientId, senderAction, cb) {
+  sendSenderAction (recipientId, senderAction, cb) {
     const req = {
       url: 'https://graph.facebook.com/v2.6/me/messages',
       qs: {
@@ -376,7 +373,7 @@ class Messenger {
    * Set a greeting text
    *
    */
-  setGreetingText(message, cb) {
+  setGreetingText (message, cb) {
     if (typeof message === 'string') {
       message = {text: message}
     }
@@ -385,71 +382,71 @@ class Messenger {
       setting_type: 'greeting',
       greeting: message
     }
-    sendThreadSettingsRequest(method, params, cb)
+    this.sendThreadSettingsRequest(method, params, cb)
   }
 
   /*
    * Set a Get Started Button
    *
    */
-  setGetStartedButton(message, cb) {
+  setGetStartedButton (message, cb) {
     if (typeof message === 'string') {
       message = [{
         payload: message
       }]
     }
     var method = 'POST'
-    var params =  {
+    var params = {
       setting_type: 'call_to_actions',
       thread_state: 'new_thread',
-      call_to_actions : {
+      call_to_actions: {
         payload: message
       }
     }
-    sendThreadSettingsRequest(method, params, cb)
+    this.sendThreadSettingsRequest(method, params, cb)
   }
 
   /*
    * Delete the Get Started Button
    *
    */
-  deleteGetStartedButton(cb) {
+  deleteGetStartedButton (cb) {
     var method = 'DELETE'
-    var params =  {
+    var params = {
       setting_type: 'call_to_actions',
       thread_state: 'new_thread'
     }
-    sendThreadSettingsRequest(method, params, cb)
+    this.sendThreadSettingsRequest(method, params, cb)
   }
 
   /*
    * Set a Persistent Menu
-   * 
+   *
    */
-  setPersistentMenu(items, cb) {
+  setPersistentMenu (items, cb) {
     var method = 'POST'
-    var params =  {
+    var params = {
       setting_type: 'call_to_actions',
       thread_state: 'existing_thread',
-      call_to_actions : items
+      call_to_actions: items
     }
-    sendThreadSettingsRequest(method, params, cb)
+    this.sendThreadSettingsRequest(method, params, cb)
   }
 
   /*
    * Delete the Persistent Menu
    *
    */
-  deletePersistentMenu(cb) {
+  deletePersistentMenu (cb) {
     var method = 'DELETE'
     var params = {
       setting_type: 'call_to_actions',
       thread_state: 'existing_thread'
     }
-    sendThreadSettingsRequest(method, params, cb)
+    this.sendThreadSettingsRequest(method, params, cb)
   }
 
-  sendThreadSettingsRequest(method, params, cb) {
+  sendThreadSettingsRequest (method, params, cb) {
     const req = {
       url: 'https://graph.facebook.com/v2.6/me/thread_settings',
       qs: {
@@ -465,7 +462,7 @@ class Messenger {
    * Get the User Profile
    *
    */
-  getUserProfile(userId, cb) {
+  getUserProfile (userId, cb) {
     const req = {
       url: `https://graph.facebook.com/v2.6/${userId}`,
       qs: {
@@ -478,24 +475,21 @@ class Messenger {
     sendRequest(req, cb)
   }
 
+  // TODO: Send API request fails
+  // Internal Errors, Rate Limited Errors, Bad Parameter Errors, Access Token Errors, Permission Errors, User Block Errors, Account Linking Errors. read more at https://developers.facebook.com/docs/messenger-platform/send-api-reference#errors
+}
+
   /*
    * Send Request to API
    *
    */
-  const sendRequest = (req, cb) => {
-    request(req, (error, response, body) => {
-      if (!cb) 
-        return
-      if (error) 
-        return cb(error)
-      if (response.body.error) 
-        return cb(response.body.error)
-      cb(null, response.body)
-    })
-  }
-
-  //TODO: Send API request fails
-  //Internal Errors, Rate Limited Errors, Bad Parameter Errors, Access Token Errors, Permission Errors, User Block Errors, Account Linking Errors. read more at https://developers.facebook.com/docs/messenger-platform/send-api-reference#errors
+const sendRequest = (req, cb) => {
+  request(req, (error, response, body) => {
+    if (!cb) return
+    if (error) return cb(error)
+    if (response.body.error) return cb(response.body.error)
+    cb(null, response.body)
+  })
 }
 
 export default Messenger
