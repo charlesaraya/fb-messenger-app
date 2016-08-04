@@ -50,7 +50,7 @@ if (data.object === 'page') {
       } else if (messagingEvent.postback) {
         messenger.receivedPostback(messagingEvent);
       } else {
-        console.log("Webhook received unknown messagingEvent: ", messagingEvent);
+        console.log('Webhook received unknown messagingEvent: ', messagingEvent);
       }
     })
   })
