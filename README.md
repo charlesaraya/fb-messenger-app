@@ -30,7 +30,7 @@ const MessengerApp = require('fb-messenger-app')
 Then create a new messenger instance passing your Facebook App page access token (this token will include all messenger permissions)
 
 ```js
-var messenger = new MessengerApp(_YOUR\_PAGE\_ACCESS\_TOKEN_)
+var messenger = new MessengerApp(YOUR_PAGE_ACCESS_TOKEN)
 ```
 
 ### Receive Messages
@@ -149,16 +149,16 @@ messenger.getUserProfile(userId[, cb])
 #### Notification Types
 
 Notification Types are optional; by default, messages will be _REGULAR_ push notification type
- - REGULAR : will emit a sound/vibration and a phone notification
- - SILENT_PUSH : will just emit a phone notification
- - NO_PUSH : will not emit either
+ - __REGULAR__ : will emit a sound/vibration and a phone notification
+ - __SILENT_PUSH__ : will just emit a phone notification
+ - __NO_PUSH__ : will not emit either
 
 #### Sender Actions
 
 Set typing indicators or send read receipts.
-- mark_seen : Mark last message as read
-- typing_on : Turn typing indicators on
-- typing_off : Turn typing indicators off
+- __mark_seen__ : Mark last message as read
+- __typing_on__ : Turn typing indicators on
+- __typing_off__ : Turn typing indicators off
 
 ## License
 
