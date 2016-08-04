@@ -35,7 +35,7 @@ var messenger = new MessengerApp(YOUR_PAGE_ACCESS_TOKEN)
 
 ### Receive Messages
 
-You'll have to listen for _POST_ calls at your webhook. [Callbacks](https://developers.facebook.com/docs/messenger-platform/webhook-reference#format) will be made to this webhook. As the Messenger Platform guide shows, you'll have to iterate over each page subscription and every messaging event
+You'll have to listen for _POST_ calls at your webhook. [Callbacks](https://developers.facebook.com/docs/messenger-platform/webhook-reference#format) will be made to this webhook. As the Messenger Platform [guide](https://developers.facebook.com/docs/messenger-platform/quickstart#steps) shows, you'll have to iterate over each page subscription and every messaging event
 
 ```js
 if (data.object === 'page') {
