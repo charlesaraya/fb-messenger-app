@@ -4,8 +4,11 @@
   "description": "NodeJS API adapter for Messenger Platform",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "standard && node my-tests.js",
     "start": "node app.js"
+  },
+  "devDependencies": {
+    "standard": "*"
   },
   "keywords": [
     "facebook",
