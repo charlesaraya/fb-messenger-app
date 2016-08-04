@@ -12,6 +12,84 @@
 npm install fb-messenger-app
 ```
 
+### How to start
+
+I take for granted that you've already [setup your Messenger Platform app](https://developers.facebook.com/docs/messenger-platform/quickstart):
+
+1. Create a Facebook App and Page
+2. Setup Webhook
+3. Get a Page Access Token
+4. Subscribe the App to the Page
+
+After installing the fb-messenger-app package with npm as shown above, you'll have to requiere it in your app
+
+```js
+const MessengerApp = require('fb-messenger-app')
+```
+
+Then create a new messenger instance passing your Facebook App page access token (this token will include all messenger permissions)
+
+```js
+var messenger = new MessengerApp(_YOUR\_PAGE\_ACCESS\_TOKEN_)
+```
+
+### Receive Messages
+
+You'll have to listen for _POST_ calls at your webhook. [Callbacks](https://developers.facebook.com/docs/messenger-platform/webhook-reference#format) will be made to this webhook. As the Messenger Platform guide shows, you'll have to iterate over each page subscription and every messaging event
+
+```js
+if (data.object === 'page') {
+  data.entry.forEach(function(pageEntry) {
+    pageEntry.messaging.forEach(function(messagingEvent) {
+      if (messagingEvent.optin) {
+        messenger.receivedAuthentication(messagingEvent);
+      } else if (messagingEvent.message) {
+        messenger.receivedMessage(messagingEvent);
+      } else if (messagingEvent.delivery) {
+        messenger.receivedDeliveryConfirmation(messagingEvent);
+      } else if (messagingEvent.postback) {
+        messenger.receivedPostback(messagingEvent);
+      } else {
+        console.log("Webhook received unknown messagingEvent: ", messagingEvent);
+      }
+    })
+  })
+}
+```
+
+### Send Messages to the user
+
+```js
+messenger.sendTextMessage(USER_ID, 'Howdy!')
+messenger.sendImageMessage(USER_ID, 'http://giphy.com/gifs/80s-go-bots-go-bots-wiNiBviTrV6ww')
+```
+
+### Using callbacks
+
+```js
+messenger.sendGenericMessage(USER_ID, myBrandProducts, function (err, body) {
+  if (err) return console.log('Something went wrong: could not send my brand products')
+  console.log('Generic message with my brand products where send to %d', USER_ID)
+})
+```
+
+### Notifications types
+
+Depending on your app's flow, generally you'll bring the users attention, or just let them know without disturbing them, but sometimes it will be the case that you won't have to disturb them at all.
+
+```js
+messenger.sendTextMessage(USER_ID, 'Hey! Check this out!', 'REGULAR')
+messenger.sendTextMessage(USER_ID, "Check this out, there's no hurry...", 'SILENT_PUSH')
+messenger.sendTextMessage(USER_ID, 'whenever you see this, check this out', 'NO_PUSH')
+```
+#### Changing the default notifications type
+
+If you wish, you can change the app default notification type.
+
+```js
+var messenger = new MessengerApp(YOUR_PAGE_ACCESS_TOKEN, DEFAULT_NOTIFICATION_TYPE)
+```
+
 ## API
 
 ##### Constructor
@@ -81,86 +159,6 @@ Set typing indicators or send read receipts.
 - mark_seen : Mark last message as read
 - typing_on : Turn typing indicators on
 - typing_off : Turn typing indicators off
-
-## Examples
-
-### How to start
-
-I take for granted that you've already [setup your Messenger Platform app](https://developers.facebook.com/docs/messenger-platform/quickstart):
-
-1. Create a Facebook App and Page
-2. Setup Webhook
-3. Get a Page Access Token
-4. Subscribe the App to the Page
-
-After installing the fb-messenger-app package with npm as shown above, you'll have to requiere it in your app
-
-```js
-const MessengerApp = require('fb-messenger-app')
-```
-
-Then create a new messenger instance passing your Facebook App page access token (this token will include all messenger permissions)
-
-```js
-var messenger = new MessengerApp(_YOUR\_PAGE\_ACCESS\_TOKEN_)
-```
-
-### Receive Messages
-
-You'll have to listen for _POST_ calls at your webhook. [Callbacks](https://developers.facebook.com/docs/messenger-platform/webhook-reference#format) will be made to this webhook. As the Messenger Platform guide shows, you'll have to iterate over each page subscription and every messaging event
-
-```js
-if (data.object === 'page') {
-  data.entry.forEach(function(pageEntry) {
-    pageEntry.messaging.forEach(function(messagingEvent) {
-      if (messagingEvent.optin) {
-        messenger.receivedAuthentication(messagingEvent);
-      } else if (messagingEvent.message) {
-        messenger.receivedMessage(messagingEvent);
-      } else if (messagingEvent.delivery) {
-        messenger.receivedDeliveryConfirmation(messagingEvent);
-      } else if (messagingEvent.postback) {
-        messenger.receivedPostback(messagingEvent);
-      } else {
-        console.log("Webhook received unknown messagingEvent: ", messagingEvent);
-      }
-    })
-  })
-}
-```
-
-### Send Messages to the user
-
-```js
-messenger.sendTextMessage(_USER\_ID_, 'Howdy!')
-messenger.sendImageMessage(_USER\_ID_, 'http://giphy.com/gifs/80s-go-bots-go-bots-wiNiBviTrV6ww')
-```
-
-### Using callbacks
-
-```js
-messenger.sendGenericMessage(_USER\_ID_, myBrandProducts, function (err, body) {
-  if (err) return console.log("Something went wrong: couldn't send my brand products")
-  console.log('Generic message with my brand products where send to %d', _USER\_ID_)
-})
-```
-
-### Notifications types
-
-Depending on your app's flow, generally you'll bring the users attention, or just let them know without disturbing them, but sometimes it will be the case that you won't have to disturb them at all.
-
-```js
-messenger.sendTextMessage(_USER\_ID_, 'Hey! Check this out!', 'REGULAR')
-messenger.sendTextMessage(_USER\_ID_, 'Check this out, there's no hurry...', 'SILENT_PUSH')
-messenger.sendTextMessage(_USER\_ID_, 'whenever you see this, check this out', 'NO_PUSH')
-```
-#### Changing the default notifications type
-
-If you wish, you can change the app default notification type.
-
-```js
-var messenger = new MessengerApp(_YOUR\_PAGE\_ACCESS\_TOKEN_, _DEFAULT\_NOTIFICATION\_TYPE_)
-```
 
 ## License
 
