@@ -102,6 +102,25 @@ class Messenger {
   }
 
   /*
+   * Message Account Linking Event
+   *
+   */
+  receivedAccountLinking (event) {
+    var sender = event.sender.id
+    var recipient = event.recipient.id
+    var timeOfLink = event.timestamp
+    var status = event.account_linking.status
+
+    if (status === 'linked') {
+      let authCode = event.account_linking.authorization_code
+      console.log('%d: The user %d and page %d has linked his account. Authorization code: %s', timeOfLink, sender, recipient, authCode)
+    }
+    if (status === 'unlinked') {
+      console.log('%d: The user %d and page %d has unlinked his account', timeOfLink, sender, recipient)
+    }
+  }
+
+  /*
    * Messange event dispatcher
    *
    */
@@ -125,10 +144,11 @@ class Messenger {
             this.receivedPostback(event)
           } else if (event.read) {
             this.receivedReadConfirmation(event)
+          } else if (event.account_linking) {
+            this.receivedAccountLinking(event)
           } else {
             console.log('Webhook received an unknown messaging event: ', event)
           }
-          // TODO: Account linking
         })
       })
     }
@@ -465,6 +485,10 @@ class Messenger {
     this.sendThreadSettingsRequest(method, params, cb)
   }
 
+  /*
+   * Configure the Thread Settings on Messenger
+   *
+   */
   sendThreadSettingsRequest (method, params, cb) {
     const req = {
       url: 'https://graph.facebook.com/v2.6/me/thread_settings',
@@ -473,6 +497,42 @@ class Messenger {
       },
       method: method,
       json: params
+    }
+    sendRequest(req, cb)
+  }
+
+  /*
+   * Retrieve the user page-scoped ID (PSID) using the account linking endpoint
+   *
+   */
+  getUserPsid (token, cb) {
+    const req = {
+      url: 'https://graph.facebook.com/v2.6/me',
+      qs: {
+        access_token: this.token,
+        fields: 'recipient',
+        account_linking_token: token
+      },
+      method: 'GET',
+      json: true
+    }
+    sendRequest(req, cb)
+  }
+
+  /*
+   * Unlink Account
+   *
+   */
+  unlinkAccount (psid, cb) {
+    const req = {
+      url: 'https://graph.facebook.com/v2.6/me/unlink_accounts',
+      qs: {
+        access_token: this.token
+      },
+      method: 'POST',
+      json: {
+        psid: psid
+      }
     }
     sendRequest(req, cb)
   }
@@ -494,6 +554,10 @@ class Messenger {
     sendRequest(req, cb)
   }
 
+  /*
+   * Helper function
+   *
+   */
   getAttachmentType (attachment, cb) {
     switch (attachment[0].type) {
       case ('image'):
