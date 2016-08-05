@@ -30,9 +30,29 @@ class Messenger {
     var recipient = event.recipient.id
     var timeOfMessage = event.timestamp
     var message = event.message
+    var mid = message.mid
+    var seq = message.seq
 
-    console.log('Received Message from user %d and page %d at %d with message: ',
-      sender, recipient, timeOfMessage, message)
+    if (message.is_echo) {
+      // When a message has been send by your page
+      console.log('%d-%d-%d: Received Echo Message from app %d, page %d and user %d. Metadata %d', seq, mid, timeOfMessage, message.app_id, sender, recipient, message.metadata)
+      if (message.attachments) {
+        let attachmentType = this.getAttachmentType(message.attachments)
+        console.log('Attachment received of type %s', attachmentType)
+      }
+    } else {
+      // When a message has been send to your page
+      if (message.text) {
+        console.log('%d-%d-%d: Received Echo Message from user %d and page %d. Text: %s', seq, mid, timeOfMessage, sender, recipient, message.text)
+      }
+      if (message.quick_reply) {
+        console.log('Quick reply received with payload %s', message.quick_reply.payload)
+      }
+      if (message.attachments) {
+        let attachmentType = this.getAttachmentType(message.attachments)
+        console.log('Attachment received of type %s', attachmentType)
+      }
+    }
   }
 
   /*
@@ -96,7 +116,6 @@ class Messenger {
 
         pageEntry.messaging.forEach((event) => {
           if (event.message) {
-            /* TODO: is_echo (Message with text message, with image, audio, video or file attachment, with fallback attachment, with template attachment) */
             this.receivedMessage(event)
           } else if (event.optin) {
             this.receivedAuthentication(event)
@@ -473,6 +492,27 @@ class Messenger {
       json: true
     }
     sendRequest(req, cb)
+  }
+
+  getAttachmentType (attachment, cb) {
+    switch (attachment[0].type) {
+      case ('image'):
+        return 'image'
+      case ('audio'):
+        return 'audio'
+      case ('video'):
+        return 'video'
+      case ('file'):
+        return 'file'
+      case ('location'):
+        return 'location'
+      case ('template'):
+        return 'template'
+      case ('fallback'):
+        return 'fallback'
+      default:
+        return 'undefined'
+    }
   }
 
   // TODO: Send API request fails
