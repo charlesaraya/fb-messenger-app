@@ -49,6 +49,8 @@ if (data.object === 'page') {
         messenger.receivedDeliveryConfirmation(messagingEvent);
       } else if (messagingEvent.postback) {
         messenger.receivedPostback(messagingEvent);
+      } else if (event.account_linking) {
+        this.receivedAccountLinking(event)
       } else {
         console.log('Webhook received unknown messagingEvent: ', messagingEvent);
       }
