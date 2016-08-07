@@ -50,7 +50,7 @@ if (data.object === 'page') {
       } else if (messagingEvent.postback) {
         messenger.receivedPostback(messagingEvent);
       } else if (event.account_linking) {
-        this.receivedAccountLinking(event)
+        messenger.receivedAccountLinking(event)
       } else {
         console.log('Webhook received unknown messagingEvent: ', messagingEvent);
       }
@@ -58,6 +58,16 @@ if (data.object === 'page') {
   })
 }
 ```
+
+There's a build-in dispatcher that handles all messaging events
+
+```js 
+app.post('/webhook', function (req, res) {
+  var data = req.body
+  messenger.messageDispatcher(data)
+})
+```
+
 
 ### Send Messages to the user
 
