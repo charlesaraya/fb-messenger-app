@@ -105,13 +105,7 @@ var messenger = new MessengerApp(token[, notificationType])
 ```js
 messenger.sendTextMessage(id, stringMessage[, notificationType][, cb])
 
-messenger.sendImageMessage(recipientId, imgUrl[, notificationType][, cb])
-
-messenger.sendAudioMessage(recipientId, audioUrl[, notificationType][, cb])
-
-messenger.sendVideoMessage(recipientId, videoUrl[, notificationType][, cb])
-
-messenger.sendFileMessage(recipientId, fileUrl[, notificationType][, cb])
+messenger.sendFileMessage(recipientId, fileType, fileUrl[, notificationType][, cb])
 
 messenger.sendButtonMessage(recipientId, buttonTemplate, buttons[, notificationType][, cb])
 
@@ -137,11 +131,9 @@ messenger.setGreetingText(message[, cb])
 
 messenger.setGetStartedButton(message[, cb])
 
-messenger.deleteGetStartedButton([cb])
-
 messenger.setPersistentMenu(items[, cb])
 
-messenger.deletePersistentMenu([cb])
+messenger.deleteThreadSetting([cb])
 
 messenger.sendThreadSettingsRequest([cb])
 

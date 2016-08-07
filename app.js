@@ -166,61 +166,14 @@ class Messenger {
   }
 
   /*
-   * Send an image (jpg, png and gifs)
+   * Send a file attachment (image, audio, video or file)
+   * image supported formats [jpg, png and gifs]
    *
    */
-  sendImageMessage (recipientId, imgUrl, notificationType, cb) {
+  sendFileMessage (recipientId, fileType, fileUrl, notificationType, cb) {
     var message = {
       attachment: {
-        type: 'image',
-        payload: {
-          url: imgUrl
-        }
-      }
-    }
-    this.sendApiMessage(recipientId, message, notificationType, cb)
-  }
-
-  /*
-   * Send an audio
-   *
-   */
-  sendAudioMessage (recipientId, audioUrl, notificationType, cb) {
-    var message = {
-      attachment: {
-        type: 'audio',
-        payload: {
-          url: audioUrl
-        }
-      }
-    }
-    this.sendApiMessage(recipientId, message, notificationType, cb)
-  }
-
-  /*
-   * Send a video
-   *
-   */
-  sendVideoMessage (recipientId, videoUrl, notificationType, cb) {
-    var message = {
-      attachment: {
-        type: 'video',
-        payload: {
-          url: videoUrl
-        }
-      }
-    }
-    this.sendApiMessage(recipientId, message, notificationType, cb)
-  }
-
-  /*
-   * Send a file
-   *
-   */
-  sendFileMessage (recipientId, fileUrl, notificationType, cb) {
-    var message = {
-      attachment: {
-        type: 'video',
+        type: fileType,
         payload: {
           url: fileUrl
         }
@@ -310,7 +263,21 @@ class Messenger {
     var message = {
       attachment: {
         type: 'template',
-        payload: itinerary
+        payload: {
+          type: 'airline_itinerary',
+          intro_message: itinerary.intro_message,
+          locale: itinerary.locale,
+          theme_color: itinerary.theme_color,  // not required, RGB hexadecimal string (default #009ddc)
+          pnr_number: itinerary.pnr_number,
+          passenger_info: itinerary.passenger_info,  // array of passenger_info
+          flight_info: itinerary.flight_info,  // array of flight_info
+          passenger_segment_info: itinerary.passenger_segment_info,  // array of passenger_segment_info
+          prince_info: itinerary.price_info,  // array of price_info, not required, limited to 4
+          base_price: itinerary.base_price,  // not required
+          tax: itinerary.tax,  // not required
+          total_price: itinerary.total_price,
+          currency: itinerary.currency  // must be a three digit ISO-4217-3 code
+        }
       }
     }
     this.sendApiMessage(recipientId, message, notificationType, cb)
@@ -324,7 +291,15 @@ class Messenger {
     var message = {
       attachment: {
         type: 'template',
-        payload: checkin
+        payload: {
+          template_type: 'airline_checkin',
+          intro_message: checkin.intro_message,
+          locale: checkin.locale,
+          theme_color: checkin.theme_color,  // not required
+          pnr_number: checkin.pnr_number,
+          flight_info: checkin.flight_info,  // array of flight info
+          checkin_url: checkin.checkin_url
+        }
       }
     }
     this.sendApiMessage(recipientId, message, notificationType, cb)
@@ -338,7 +313,13 @@ class Messenger {
     var message = {
       attachment: {
         type: 'template',
-        payload: boardingpass
+        payload: {
+          template_type: 'airline_boardingpass',
+          intro_message: boardingpass.intro_message,
+          locale: boardingpass.locale,
+          theme_color: boardingpass.theme_color,  // not required
+          boarding_pass: boardingpass.boarding_pass  // array of boarding_pass
+        }
       }
     }
     this.sendApiMessage(recipientId, message, notificationType, cb)
@@ -346,20 +327,35 @@ class Messenger {
 
   /*
    * Send a flight update message
+   * update_type must be delay, gate_change or cancellation
    *
    */
   sendFlightupdateMessage (recipientId, flightupdate, notificationType, cb) {
     var message = {
       attachment: {
         type: 'template',
-        payload: flightupdate
+        payload: {
+          template_type: 'airline_update',
+          intro_message: flightupdate,
+          update_type: flightupdate.update_type,
+          locale: flightupdate.locale,
+          theme_color: flightupdate.theme_color,  // not required
+          pnr_number: flightupdate.pnr_number,
+          update_flight_info: {
+            flight_number: flightupdate.flight_number,
+            departure_airport: flightupdate.departure_airport,
+            arrival_airport: flightupdate.arrival_airport,
+            flight_schedule: {  // must be ISO 8601-based format
+              boarding_time: flightupdate.boarding_time,  // not required
+              departure_time: flightupdate.departure_time,
+              arrival_time: flightupdate.arrival_time  // not required
+            }
+          }
+        }
       }
     }
     this.sendApiMessage(recipientId, message, notificationType, cb)
   }
-
-  // TODO: Phone Number
-  // You can send a message to a user without requiring the user interacting with the page first, by specifying a phone_number. Requires the pages_messaging_phone_number permission. read more at https://developers.facebook.com/docs/messenger-platform/send-api-reference#phone_number
 
   /*
    * Send a message to a user.
@@ -446,19 +442,6 @@ class Messenger {
   }
 
   /*
-   * Delete the Get Started Button
-   *
-   */
-  deleteGetStartedButton (cb) {
-    var method = 'DELETE'
-    var params = {
-      setting_type: 'call_to_actions',
-      thread_state: 'new_thread'
-    }
-    this.sendThreadSettingsRequest(method, params, cb)
-  }
-
-  /*
    * Set a Persistent Menu
    *
    */
@@ -473,14 +456,14 @@ class Messenger {
   }
 
   /*
-   * Delete the Persistent Menu
+   * Delete Thread Setting [Get Started Button('new_thread') or Persistent Menu('existing_thread')]
    *
    */
-  deletePersistentMenu (cb) {
+  deleteThreadSetting (threadType, cb) {
     var method = 'DELETE'
     var params = {
       setting_type: 'call_to_actions',
-      thread_state: 'existing_thread'
+      thread_state: threadType
     }
     this.sendThreadSettingsRequest(method, params, cb)
   }
