@@ -4,3 +4,4 @@ node_modules/
 config.json
 test.js
 .npmignore
+npm-debub.log
