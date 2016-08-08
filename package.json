@@ -2,11 +2,10 @@
   "name": "fb-messenger-app",
   "version": "1.0.3",
   "description": "NodeJS API adapter for Messenger Platform",
-  "main": "app.js",
+  "main": "app-compiled.js",
   "scripts": {
     "build": "babel src --out-file app-compiled.js",
-    "test": "standard",
-    "prestart": "npm run build",
+    "test": "standard src/app.js",
     "start": "node app-compiled.js"
   },
   "devDependencies": {
