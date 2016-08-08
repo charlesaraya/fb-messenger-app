@@ -1,7 +1,7 @@
 main/
+test/
 node_modules/
 .idea/
 config.json
-test.js
 .npmignore
 npm-debub.log
