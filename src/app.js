@@ -1,5 +1,4 @@
-// import request from 'request'
-const request = require('request')
+import request from 'request'
 
 class Messenger {
 
@@ -580,5 +579,4 @@ const sendRequest = (req, cb) => {
   })
 }
 
-// export default Messenger
-module.exports = Messenger
+export default Messenger
