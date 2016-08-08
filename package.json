@@ -4,11 +4,16 @@
   "description": "NodeJS API adapter for Messenger Platform",
   "main": "app.js",
   "scripts": {
-    "test": "standard && node my-tests.js",
-    "start": "node app.js"
+    "build": "babel src --out-file app-compiled.js",
+    "test": "standard",
+    "prestart": "npm run build",
+    "start": "node app-compiled.js"
   },
   "devDependencies": {
-    "standard": "*"
+    "babel-cli": "^6.11.4",
+    "babel-plugin-transform-export-extensions": "^6.8.0",
+    "babel-preset-es2015": "^6.13.2",
+    "standard": "^7.1.0"
   },
   "keywords": [
     "facebook",
@@ -26,5 +31,13 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/charlesaraya/fb-messenger-app.git"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ],
+    "plugins": [
+      "transform-export-extensions"
+    ]
   }
 }
