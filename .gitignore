@@ -1,4 +1,4 @@
-lib/
+main/
 node_modules/
 .idea/
 config.json
