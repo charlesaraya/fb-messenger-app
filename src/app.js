@@ -1,5 +1,7 @@
 import request from 'request'
 
+const apiUrl = 'https://graph.facebook.com/v2.6/'
+
 class Messenger {
 
   constructor (token, notificationType) {
@@ -13,7 +15,7 @@ class Messenger {
    */
   subscribeApp (cb) {
     const req = {
-      url: 'https://graph.facebook.com/v2.6/me/subscribed_apps',
+      url: `${apiUrl}me/subscribed_apps`,
       qs: {
         access_token: this.token
       },
@@ -395,7 +397,7 @@ class Messenger {
       notificationType = this.notificationType
     }
     const req = {
-      url: 'https://graph.facebook.com/v2.6/me/messages',
+      url: `${apiUrl}me/messages`,
       qs: {
         access_token: this.token
       },
@@ -417,7 +419,7 @@ class Messenger {
    */
   sendSenderAction (recipientId, senderAction, cb) {
     const req = {
-      url: 'https://graph.facebook.com/v2.6/me/messages',
+      url: `${apiUrl}me/messages`,
       qs: {
         access_token: this.token
       },
@@ -502,7 +504,7 @@ class Messenger {
    */
   sendThreadSettingsRequest (method, params, cb) {
     const req = {
-      url: 'https://graph.facebook.com/v2.6/me/thread_settings',
+      url: `${apiUrl}me/thread_settings`,
       qs: {
         access_token: this.token
       },
@@ -518,7 +520,7 @@ class Messenger {
    */
   getUserPsid (token, cb) {
     const req = {
-      url: 'https://graph.facebook.com/v2.6/me',
+      url: `${apiUrl}me`,
       qs: {
         access_token: this.token,
         fields: 'recipient',
@@ -536,7 +538,7 @@ class Messenger {
    */
   unlinkAccount (psid, cb) {
     const req = {
-      url: 'https://graph.facebook.com/v2.6/me/unlink_accounts',
+      url: `${apiUrl}me/unlink_accounts`,
       qs: {
         access_token: this.token
       },
@@ -575,7 +577,7 @@ class Messenger {
    */
   getUserProfile (userId, cb) {
     const req = {
-      url: `https://graph.facebook.com/v2.6/${userId}`,
+      url: `${apiUrl}${userId}`,
       qs: {
         access_token: this.token,
         fields: 'first_name,last_name,profile_pic,locale,timezone,gender'
