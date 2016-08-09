@@ -1,5 +1,4 @@
 import request from 'request'
-import crypto from 'crypto'
 
 class Messenger {
 
@@ -23,30 +22,6 @@ class Messenger {
       json: true
     }
     sendRequest(req, cb)
-  }
-
-  /*
-   *  Verify that the callback came from Facebook.
-   *
-   */
-
-  verifyRequestSignature (req, res, buf) {
-    var signature = req.headers['x-hub-signature']
-
-    if (!signature) {
-      throw new Error("Couldn't validate the signature.")
-    } else {
-      let elements = signature.split('=')
-      let signatureHash = elements[1]
-
-      let expectedHash = crypto.createHmac('sha1', this.app_secret)
-                          .update(buf)
-                          .digest('hex')
-
-      if (signatureHash !== expectedHash) {
-        throw new Error("Couldn't validate the hash signature.")
-      }
-    }
   }
 
   /*
