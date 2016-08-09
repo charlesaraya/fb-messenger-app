@@ -1,7 +1,30 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+
 main/
 test/
+
+# Dependency directory
 node_modules/
-.idea/
-config.json
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# Mac OS files
+.DS_Store
+
+# Environment
+.env
+
+# npm ignores
 .npmignore
-npm-debub.log
