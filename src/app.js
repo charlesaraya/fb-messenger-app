@@ -563,6 +563,27 @@ class Messenger {
   }
 
   /*
+   * Account linking call-2-action
+   *
+   */
+  sendAccountLinking (recipientId, text, serverUrl, cb) {
+    var message = {
+      attachment: {
+        type: 'tempalte',
+        payload: {
+          template_type: 'button',
+          text: text,
+          buttons: [{
+            type: 'account_link',
+            url: `${serverUrl}/authorize`
+          }]
+        }
+      }
+    }
+    this.sendApiMessage(recipientId, message, cb)
+  }
+
+  /*
    * Get the User Profile
    *
    */
