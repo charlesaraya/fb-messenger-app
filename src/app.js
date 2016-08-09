@@ -2,9 +2,8 @@ import request from 'request'
 
 class Messenger {
 
-  constructor (token, secret, notificationType) {
+  constructor (token, notificationType) {
     this.token = token
-    this.app_secret = secret
     this.notificationType = notificationType || 'REGULAR'
   }
 
