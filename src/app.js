@@ -49,25 +49,31 @@ class Messenger {
     var mid = message.mid
     var seq = message.seq
 
-    if (message.is_echo) {
-      // When a message has been send by your page
-      console.log('%d-%d-%d: Received Echo Message from app %d, page %d and user %d. Metadata %d', seq, mid, timeOfMessage, message.app_id, sender, recipient, message.metadata)
-      if (message.attachments) {
-        let attachmentType = this.getAttachmentType(message.attachments)
-        console.log('Attachment received of type %s', attachmentType)
-      }
-    } else {
-      // When a message has been send to your page
-      if (message.text) {
-        console.log('%d-%d-%d: Received Echo Message from user %d and page %d. Text: %s', seq, mid, timeOfMessage, sender, recipient, message.text)
-      }
-      if (message.quick_reply) {
-        console.log('Quick reply received with payload %s', message.quick_reply.payload)
-      }
-      if (message.attachments) {
-        let attachmentType = this.getAttachmentType(message.attachments)
-        console.log('Attachment received of type %s', attachmentType)
-      }
+    let isEcho = message.is_echo
+    let metadata = message.metadata
+    let appId = message.app_id
+    let quickReply = message.quick_reply
+    let text = message.text
+    let attachment = message.attachments
+
+    if (isEcho) {  // When a message has been send by your page
+      console.log(`${seq}-${mid}-${timeOfMessage}: Received echo message from app 
+        ${appId}, page ${sender} and user ${recipient} with metadata ${metadata}`)
+      return
+    } else if (quickReply) {
+      let quickReplyPayload = quickReply.payload
+      console.log(`${seq}-${mid}-${timeOfMessage}: Quick reply received from 
+        user ${sender} and page ${recipient} with text ${text} and payload ${quickReplyPayload}`)
+      return
+    }
+    // When a message has been send to your page
+    if (text) {
+      console.log(`${seq}-${mid}-${timeOfMessage}: Received message from user 
+        ${sender} and page ${recipient} with  text ${text}`)
+    } else if (attachment) {
+      let attachmentType = message.attachments[0].type
+      console.log(`${seq}-${mid}-${timeOfMessage}: Received message from user 
+        ${sender} and page ${recipient} with attachment of type ${attachmentType}`)
     }
   }
 
