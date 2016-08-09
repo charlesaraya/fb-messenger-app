@@ -5,8 +5,10 @@ const apiUrl = 'https://graph.facebook.com/v2.6/'
 class Messenger {
 
   constructor (token, notificationType) {
-    this.token = token
+    this.token = token || null
     this.notificationType = notificationType || 'REGULAR'
+
+    if (!this.token) throw new Error('Facebook Page token is missing')
   }
 
   /*
