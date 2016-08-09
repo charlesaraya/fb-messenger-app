@@ -148,6 +148,8 @@ messenger.deleteThreadSetting([cb])
 messenger.sendThreadSettingsRequest([cb])
 
 messenger.getUserProfile(userId[, cb])
+
+messenger.subscribeApp([cb])
 ```
 
 #### Notification Types
