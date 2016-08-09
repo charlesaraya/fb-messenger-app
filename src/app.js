@@ -8,10 +8,10 @@ class Messenger {
   }
 
   /*
-   * Authorization Event
+   * Subscribe App via API
    *
    */
-  subscribeApp (token, cb) {
+  subscribeApp (cb) {
     const req = {
       url: 'https://graph.facebook.com/v2.6/me/subscribed_apps',
       qs: {
@@ -63,7 +63,8 @@ class Messenger {
     } else if (quickReply) {
       let quickReplyPayload = quickReply.payload
       console.log(`${seq}-${mid}-${timeOfMessage}: Quick reply received from 
-        user ${sender} and page ${recipient} with text ${text} and payload ${quickReplyPayload}`)
+        user ${sender} and page ${recipient} with text ${text} and payload 
+        ${quickReplyPayload}`)
       return
     }
     // When a message has been send to your page
@@ -90,7 +91,8 @@ class Messenger {
 
     if (mids) {
       mids.forEach((mid) => {
-        console.log(`Received delivery confirmation from user ${sender} and page ${recipient} with mid ${mid} and sequence #${seq}`)
+        console.log(`Received delivery confirmation from user ${sender} and page 
+          ${recipient} with mid ${mid} and sequence #${seq}`)
       })
     }
     console.log(`All messages before ${watermark} were delivered`)
