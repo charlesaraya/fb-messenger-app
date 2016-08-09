@@ -11,6 +11,22 @@ class Messenger {
    * Authorization Event
    *
    */
+  subscribeApp (token, cb) {
+    const req = {
+      url: 'https://graph.facebook.com/v2.6/me/subscribed_apps',
+      qs: {
+        access_token: this.token
+      },
+      method: 'POST',
+      json: true
+    }
+    sendRequest(req, cb)
+  }
+
+  /*
+   * Authorization Event
+   *
+   */
   receivedAuthentication (event) {
     var sender = event.sender.id
     var recipient = event.recipient.id
