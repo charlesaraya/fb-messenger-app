@@ -33,8 +33,8 @@ class Messenger {
     var timeOfAuth = event.timestamp
     var passThroughParam = event.optin.ref
 
-    console.log('Authentication received for user %d and page %d with pass ' +
-      "through param '%s' at %d", sender, recipient, passThroughParam, timeOfAuth)
+    console.log(`Authentication received for user ${sender} and page ${recipient} 
+      with pass-through param ${passThroughParam} at ${timeOfAuth}`)
   }
 
   /*
@@ -84,16 +84,16 @@ class Messenger {
   receivedDeliveryConfirmation (event) {
     var sender = event.sender.id
     var recipient = event.recipient.id
-    var messages = event.delivery.mids
+    var mids = event.delivery.mids
     var watermark = event.delivery.watermark
-    var sequence = event.delivery.seq
+    var seq = event.delivery.seq
 
-    if (messages) {
-      messages.forEach((message) => {
-        console.log('Received delivery confirmation from user %d and page %d for message ID: %s and sequence #%d', sender, recipient, message, sequence)
+    if (mids) {
+      mids.forEach((mid) => {
+        console.log(`Received delivery confirmation from user ${sender} and page ${recipient} with mid ${mid} and sequence #${seq}`)
       })
     }
-    console.log('All messages before %d were delivered', watermark)
+    console.log(`All messages before ${watermark} were delivered`)
   }
 
   /*
@@ -106,7 +106,8 @@ class Messenger {
     var timeOfPostback = event.timestamp
     var payload = event.postback.payload
 
-    console.log("Received postback for user %d and page %d with payload '%s' at %d", sender, recipient, payload, timeOfPostback)
+    console.log(`Received postback for user ${sender} and page ${recipient} with 
+      payload ${payload} at ${timeOfPostback}`)
   }
 
   /*
@@ -118,9 +119,10 @@ class Messenger {
     var recipient = event.recipient.id
     var timeOfRead = event.timestamp
     var watermark = event.read.watermark
-    var sequence = event.read.seq
+    var seq = event.read.seq
 
-    console.log('%d-$d: All Messages were read from user %d and page %d before %d', timeOfRead, sequence, sender, recipient, watermark)
+    console.log(`${seq}-${timeOfRead}: All Messages were read from user ${sender} 
+      and page ${recipient} before ${watermark}`)
   }
 
   /*
@@ -135,10 +137,12 @@ class Messenger {
 
     if (status === 'linked') {
       let authCode = event.account_linking.authorization_code
-      console.log('%d: The user %d and page %d has linked his account. Authorization code: %s', timeOfLink, sender, recipient, authCode)
+      console.log(`${timeOfLink}: The user ${sender} and page ${recipient} has 
+        linked his account with authorization code ${authCode}`)
     }
     if (status === 'unlinked') {
-      console.log('%d: The user %d and page %d has unlinked his account', timeOfLink, sender, recipient)
+      console.log(`${timeOfLink}: The user ${sender} and page ${recipient} has 
+        unlinked his account`)
     }
   }
 
@@ -153,7 +157,7 @@ class Messenger {
         var pageId = pageEntry.id
         var timeOfEvent = pageEntry.time
 
-        console.log('New message event from page %d at %d', pageId, timeOfEvent)
+        console.log(`New message event from page ${pageId} at ${timeOfEvent}`)
 
         pageEntry.messaging.forEach((event) => {
           if (event.message) {
