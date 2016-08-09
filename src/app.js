@@ -190,11 +190,11 @@ class Messenger {
    * Send a plain text message
    *
    */
-  sendTextMessage (recipientId, text, notificationType, cb) {
+  sendTextMessage (recipient, text, notificationType, cb) {
     var message = {
       text: text
     }
-    this.sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
   /*
@@ -202,7 +202,7 @@ class Messenger {
    * image supported formats [jpg, png and gifs]
    *
    */
-  sendFileMessage (recipientId, fileType, fileUrl, notificationType, cb) {
+  sendFileMessage (recipient, fileType, fileUrl, notificationType, cb) {
     var message = {
       attachment: {
         type: fileType,
@@ -211,14 +211,14 @@ class Messenger {
         }
       }
     }
-    this.sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
   /*
    * Send a button message
    *
    */
-  sendButtonMessage (recipientId, buttonTemplate, notificationType, cb) {
+  sendButtonMessage (recipient, buttonTemplate, notificationType, cb) {
     var message = {
       attachment: {
         type: 'template',
@@ -229,14 +229,14 @@ class Messenger {
         }
       }
     }
-    this.sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
   /*
    * Send a Structured Message
    *
    */
-  sendGenericMessage (recipientId, elements, notificationType, cb) {
+  sendGenericMessage (recipient, elements, notificationType, cb) {
     var message = {
       attachment: {
         type: 'template',
@@ -246,14 +246,14 @@ class Messenger {
         }
       }
     }
-    this.sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
   /*
    * Send a receipt message
    *
    */
-  sendReceiptMessage (recipientId, receipt, notificationType, cb) {
+  sendReceiptMessage (recipient, receipt, notificationType, cb) {
     var message = {
       attachment: {
         type: 'template',
@@ -272,26 +272,26 @@ class Messenger {
         }
       }
     }
-    this.sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
   /*
    * Send a quick reply message.
    *
    */
-  sendQuickMessage (recipientId, quickReplies, notificationType, cb) {
+  sendQuickMessage (recipient, quickReplies, notificationType, cb) {
     var message = {
       text: quickReplies.text,
       quick_replies: quickReplies.quick_replies
     }
-    this.sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
   /*
    * Send an airplane itinerary message
    *
    */
-  sendItineraryMessage (recipientId, itinerary, notificationType, cb) {
+  sendItineraryMessage (recipient, itinerary, notificationType, cb) {
     var message = {
       attachment: {
         type: 'template',
@@ -312,14 +312,14 @@ class Messenger {
         }
       }
     }
-    this.sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
   /*
    * Send an airplane check-in reminder message
    *
    */
-  sendCheckinMessage (recipientId, checkin, notificationType, cb) {
+  sendCheckinMessage (recipient, checkin, notificationType, cb) {
     var message = {
       attachment: {
         type: 'template',
@@ -334,14 +334,14 @@ class Messenger {
         }
       }
     }
-    this.sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
   /*
    * Send an Airplane Boarding Pass message
    *
    */
-  sendBoardingpassMessage (recipientId, boardingpass, notificationType, cb) {
+  sendBoardingpassMessage (recipient, boardingpass, notificationType, cb) {
     var message = {
       attachment: {
         type: 'template',
@@ -354,7 +354,7 @@ class Messenger {
         }
       }
     }
-    this.sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
   /*
@@ -362,7 +362,7 @@ class Messenger {
    * update_type must be delay, gate_change or cancellation
    *
    */
-  sendFlightupdateMessage (recipientId, flightupdate, notificationType, cb) {
+  sendFlightupdateMessage (recipient, flightupdate, notificationType, cb) {
     var message = {
       attachment: {
         type: 'template',
@@ -386,17 +386,20 @@ class Messenger {
         }
       }
     }
-    this.sendApiMessage(recipientId, message, notificationType, cb)
+    this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
   /*
    * Send a message to a user.
    *
    */
-  sendApiMessage (recipientId, message, notificationType, cb) {
+  sendApiMessage (recipient, message, notificationType, cb) {
     if (typeof notificationType === 'function') {
       cb = notificationType
       notificationType = this.notificationType
+    }
+    if (!recipient.id && !recipient.phoneNumber) {
+      throw new Error('Send API message error: recipient id or phone number must be set')
     }
     const req = {
       url: `${apiUrl}me/messages`,
@@ -406,7 +409,8 @@ class Messenger {
       method: 'POST',
       json: {
         recipient: {
-          id: recipientId
+          id: recipient.id || null,
+          phone_number: recipient.phoneNumber || null
         },
         message: message,
         notification_type: notificationType
@@ -419,7 +423,10 @@ class Messenger {
    * Send Sender Actions
    *
    */
-  sendSenderAction (recipientId, senderAction, cb) {
+  sendSenderAction (recipient, senderAction, cb) {
+    if (!recipient.id && !recipient.phoneNumber) {
+      throw new Error('Sender action error: recipient id or phone number must be set')
+    }
     const req = {
       url: `${apiUrl}me/messages`,
       qs: {
@@ -428,7 +435,8 @@ class Messenger {
       method: 'POST',
       json: {
         recipient: {
-          id: recipientId
+          id: recipient.id || null,
+          phone_number: recipient.phoneNumber || null
         },
         sender_action: senderAction
       }
@@ -556,7 +564,7 @@ class Messenger {
    * Account linking call-2-action
    *
    */
-  sendAccountLinking (recipientId, text, serverUrl, cb) {
+  sendAccountLinking (recipient, text, serverUrl, cb) {
     var message = {
       attachment: {
         type: 'tempalte',
@@ -570,7 +578,7 @@ class Messenger {
         }
       }
     }
-    this.sendApiMessage(recipientId, message, cb)
+    this.sendApiMessage(recipient, message, cb)
   }
 
   /*
