@@ -304,7 +304,7 @@ class Messenger {
           passenger_info: itinerary.passenger_info,  // array of passenger_info
           flight_info: itinerary.flight_info,  // array of flight_info
           passenger_segment_info: itinerary.passenger_segment_info,  // array of passenger_segment_info
-          prince_info: itinerary.price_info,  // array of price_info, not required, limited to 4
+          price_info: itinerary.price_info,  // array of price_info, not required, limited to 4
           base_price: itinerary.base_price,  // not required
           tax: itinerary.tax,  // not required
           total_price: itinerary.total_price,
@@ -368,7 +368,7 @@ class Messenger {
         type: 'template',
         payload: {
           template_type: 'airline_update',
-          intro_message: flightupdate,
+          intro_message: flightupdate.intro_message,
           update_type: flightupdate.update_type,
           locale: flightupdate.locale,
           theme_color: flightupdate.theme_color,  // not required
