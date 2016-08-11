@@ -296,7 +296,7 @@ class Messenger {
       attachment: {
         type: 'template',
         payload: {
-          type: 'airline_itinerary',
+          template_type: 'airline_itinerary',
           intro_message: itinerary.intro_message,
           locale: itinerary.locale,
           theme_color: itinerary.theme_color,  // not required, RGB hexadecimal string (default #009ddc)
@@ -374,13 +374,23 @@ class Messenger {
           theme_color: flightupdate.theme_color,  // not required
           pnr_number: flightupdate.pnr_number,
           update_flight_info: {
-            flight_number: flightupdate.flight_number,
-            departure_airport: flightupdate.departure_airport,
-            arrival_airport: flightupdate.arrival_airport,
+            flight_number: flightupdate.update_flight_info.flight_number,
+            departure_airport: {
+              airport_code: flightupdate.update_flight_info.departure_airport.airport_code,
+              city: flightupdate.update_flight_info.departure_airport.city,
+              terminal: flightupdate.update_flight_info.departure_airport.terminal,
+              gate: flightupdate.update_flight_info.departure_airport.gate
+            },
+            arrival_airport: {
+              airport_code: flightupdate.update_flight_info.arrival_airport.airport_code,
+              city: flightupdate.update_flight_info.arrival_airport.city,
+              terminal: flightupdate.update_flight_info.arrival_airport.terminal,
+              gate: flightupdate.update_flight_info.arrival_airport.gate
+            },
             flight_schedule: {  // must be ISO 8601-based format
-              boarding_time: flightupdate.boarding_time,  // not required
-              departure_time: flightupdate.departure_time,
-              arrival_time: flightupdate.arrival_time  // not required
+              boarding_time: flightupdate.update_flight_info.flight_schedule.boarding_time,  // not required
+              departure_time: flightupdate.update_flight_info.flight_schedule.departure_time,
+              arrival_time: flightupdate.update_flight_info.flight_schedule.arrival_time  // not required
             }
           }
         }
