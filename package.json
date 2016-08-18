@@ -6,7 +6,7 @@
   "scripts": {
     "build": "babel src -d main",
     "test": "standard src/app.js",
-    "start": "node main/app.js"
+    "start": "npm run build"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",
