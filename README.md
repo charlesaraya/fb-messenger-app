@@ -30,7 +30,7 @@ const MessengerApp = require('fb-messenger-app')
 Then create a new messenger instance passing your Facebook App page access token (this token will include all messenger permissions)
 
 ```js
-var messenger = new MessengerApp(YOUR_PAGE_ACCESS_TOKEN)
+var messenger = new MessengerApp(MY_PAGE_ACCESS_TOKEN)
 ```
 
 ### Receive Messages
@@ -68,12 +68,15 @@ app.post('/webhook', function (req, res) {
 })
 ```
 
-
 ### Send Messages to the user
+
+All send Message methods call to ```sendApiMessage```. It'll make POST calls to facebook's Graph API with your app's page access token, and a JSON payload with the 'recipient's id' and the message object to be send (text, image, audio, structured message, receipt, quick replies, airline itinerary, etc.).
 
 ```js
 messenger.sendTextMessage(USER_ID, 'Howdy!')
-messenger.sendImageMessage(USER_ID, 'http://giphy.com/gifs/80s-go-bots-go-bots-wiNiBviTrV6ww')
+messenger.sendFileMessage(USER_ID, 'image', 'http://giphy.com/gifs/80s-go-bots-go-bots-wiNiBviTrV6ww')
+messenger.sendGenericMessage(USER_ID, genericData)
+messenger.sendCheckinMessage(USER_ID, userCheckin)
 ```
 
 ### Using callbacks
@@ -91,15 +94,16 @@ Depending on your app's flow, generally you'll bring the users attention, or jus
 
 ```js
 messenger.sendTextMessage(USER_ID, 'Hey! Check this out!', 'REGULAR')
-messenger.sendTextMessage(USER_ID, "Check this out, there's no hurry...", 'SILENT_PUSH')
-messenger.sendTextMessage(USER_ID, 'whenever you see this, check this out', 'NO_PUSH')
+messenger.sendTextMessage(USER_ID, 'Check this out, there's no hurry...', 'SILENT_PUSH')
+messenger.sendTextMessage(USER_ID, 'If you see this message, check this out', 'NO_PUSH')
 ```
+
 #### Changing the default notifications type
 
-If you wish, you can change the app default notification type.
+You can change the app's notification type default. If ```undefined```, It will be set to 'REGULAR' by default.
 
 ```js
-var messenger = new MessengerApp(YOUR_PAGE_ACCESS_TOKEN, DEFAULT_NOTIFICATION_TYPE)
+var messenger = new MessengerApp(MY_PAGE_ACCESS_TOKEN, MY_NOTIFICATION_TYPE)
 ```
 
 ## API
@@ -115,27 +119,29 @@ var messenger = new MessengerApp(token[, notificationType])
 ```js
 messenger.sendTextMessage(id, stringMessage[, notificationType][, cb])
 
-messenger.sendFileMessage(recipientId, fileType, fileUrl[, notificationType][, cb])
+messenger.sendFileMessage(recipient, fileType, fileUrl[, notificationType][, cb])
 
-messenger.sendButtonMessage(recipientId, buttonTemplate, buttons[, notificationType][, cb])
+messenger.sendButtonMessage(recipient, buttonTemplate, buttons[, notificationType][, cb])
 
-messenger.sendGenericMessage(recipientId, elements[, notificationType][, cb])
+messenger.sendGenericMessage(recipient, elements[, notificationType][, cb])
 
-messenger.sendReceiptMessage(recipientId, receipt[, notificationType][, cb])
+messenger.sendReceiptMessage(recipient, receipt[, notificationType][, cb])
 
-messenger.sendQuickMessage(recipientId, quickReplies[, notificationType][, cb])
+messenger.sendQuickMessage(recipient, quickReplies[, notificationType][, cb])
 
-messenger.sendItineraryMessage(recipientId, itinerary[, notificationType][, cb])
+messenger.sendItineraryMessage(recipient, itinerary[, notificationType][, cb])
 
-messenger.sendCheckinMessage(recipientId, checkin[, notificationType][, cb])
+messenger.sendCheckinMessage(recipient, checkin[, notificationType][, cb])
 
-messenger.sendBoardingpassMessage(recipientId, boardingpass[, notificationType][, cb])
+messenger.sendBoardingpassMessage(recipient, boardingpass[, notificationType][, cb])
 
-messenger.sendFlightupdateMessage(recipientId, flightupdate[, notificationType][, cb])
+messenger.sendFlightupdateMessage(recipient, flightupdate[, notificationType][, cb])
 
-messenger.sendApiMessage(recipientId, message[, notificationType][, cb])
+messenger.sendApiMessage(recipient, message[, notificationType][, cb])
 
-messenger.sendSenderAction(recipientId, senderAction[, cb])
+messenger.sendSenderAction(recipient, senderAction[, cb])
+
+messenger.getUserProfile(userId[, cb])
 
 messenger.setGreetingText(message[, cb])
 
@@ -143,21 +149,27 @@ messenger.setGetStartedButton(message[, cb])
 
 messenger.setPersistentMenu(items[, cb])
 
-messenger.deleteThreadSetting([cb])
+messenger.sendThreadSettingsRequest(method, params[, cb])
 
-messenger.sendThreadSettingsRequest([cb])
-
-messenger.getUserProfile(userId[, cb])
+messenger.deleteThreadSetting(threadType[, cb])
 
 messenger.subscribeApp([cb])
+
+messenger.getUserPsid(tokeb[, cb])
+
+messenger.unlinkAccount(psid[, cb])
+
+messenger.sendAccountLinking(recipient, text, serverUrl[, cb])
+
+messenger.getAttachmentType(attachment)  //Helper function
 ```
 
 #### Notification Types
 
-Notification Types are optional; by default, messages will be _REGULAR_ push notification type
- - __REGULAR__ : will emit a sound/vibration and a phone notification
- - __SILENT_PUSH__ : will just emit a phone notification
- - __NO_PUSH__ : will not emit either
+Notification Types are optional; by default, messages will be _REGULAR_ push notification type.
+- __REGULAR__ : will emit a sound/vibration and a phone notification
+- __SILENT_PUSH__ : will just emit a phone notification
+- __NO_PUSH__ : will not emit either
 
 #### Sender Actions
 
