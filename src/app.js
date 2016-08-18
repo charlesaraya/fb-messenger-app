@@ -620,7 +620,7 @@ class Messenger {
    * Helper function
    *
    */
-  getAttachmentType (attachment, cb) {
+  getAttachmentType (attachment) {
     switch (attachment[0].type) {
       case ('image'):
         return 'image'
