@@ -8,7 +8,6 @@ pids
 *.pid
 *.seed
 
-main/
 test/
 
 # Dependency directory
