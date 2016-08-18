@@ -408,9 +408,11 @@ class Messenger {
       cb = notificationType
       notificationType = this.notificationType
     }
+    /*
     if (!recipient.id && !recipient.phoneNumber) {
       throw new Error('Send API message error: recipient id or phone number must be set')
     }
+    */
     const req = {
       url: `${apiUrl}me/messages`,
       qs: {
@@ -419,8 +421,11 @@ class Messenger {
       method: 'POST',
       json: {
         recipient: {
+          /*
           id: recipient.id || null,
           phone_number: recipient.phoneNumber || null
+          */
+          id: recipient // fix id/phone_number
         },
         message: message,
         notification_type: notificationType
@@ -445,8 +450,11 @@ class Messenger {
       method: 'POST',
       json: {
         recipient: {
+          /*
           id: recipient.id || null,
           phone_number: recipient.phoneNumber || null
+          */
+          id: recipient // fix recipient id/phone_number
         },
         sender_action: senderAction
       }
