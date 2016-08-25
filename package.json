@@ -22,7 +22,7 @@
     "bot",
     "fb"
   ],
-  "author": "Carlos Araya",
+  "author": "Carlos Araya <charlesaraya@gmail.com> (http://charlesaraya.com/)",
   "license": "MIT",
   "dependencies": {
     "request": "^2.72.0"
@@ -31,6 +31,10 @@
     "type": "git",
     "url": "https://github.com/charlesaraya/fb-messenger-app.git"
   },
+  "bugs": {
+    "url": "https://github.com/charlesaraya/fb-messenger-app/issues"
+  },
+  "homepage": "https://github.com/charlesaraya/fb-messenger-app#readme",
   "babel": {
     "presets": [
       "es2015"
