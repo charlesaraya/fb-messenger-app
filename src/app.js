@@ -2,18 +2,21 @@ import request from 'request'
 
 const apiUrl = 'https://graph.facebook.com/v2.6/'
 
+// TODO: closing the browser (Read at https://developers.facebook.com/docs/messenger-platform/send-api-reference/button-template#close_window)
+
 class Messenger {
 
-  constructor (token, notificationType) {
-    this.token = token || null
-    this.notificationType = notificationType || 'REGULAR'
+  constructor (token = null, notificationType = 'REGULAR') {
+    this.token = token
+    this.notificationType = notificationType
 
     if (!this.token) throw new Error('Facebook Page token is missing')
   }
 
-  /*
-   * Subscribe App via API
+   /**
+   * This method will subscribe App via API
    *
+   * @param {Function} cb - The callback function
    */
   subscribeApp (cb) {
     const req = {
@@ -27,9 +30,10 @@ class Messenger {
     sendRequest(req, cb)
   }
 
-  /*
-   * Authorization Event
+   /**
+   * This method is called when an Authentication Event occurs.
    *
+   * @param {Object} event - The authentication event
    */
   receivedAuthentication (event) {
     var sender = event.sender.id
@@ -41,9 +45,10 @@ class Messenger {
       with pass-through param ${passThroughParam} at ${timeOfAuth}`)
   }
 
-  /*
-   * Received Message Event
+   /**
+   * This method is called when a Message Event occurs.
    *
+   * @param {Object} event - The message event
    */
   receivedMessage (event) {
     var sender = event.sender.id
@@ -60,31 +65,35 @@ class Messenger {
     let text = message.text
     let attachment = message.attachments
 
-    if (isEcho) {  // When a message has been send by your page
+    // When a message has been send BY your page
+    if (isEcho) {
       console.log(`${seq}-${mid}-${timeOfMessage}: Received echo message from app 
         ${appId}, page ${sender} and user ${recipient} with metadata ${metadata}`)
       return
     } else if (quickReply) {
       let quickReplyPayload = quickReply.payload
+
       console.log(`${seq}-${mid}-${timeOfMessage}: Quick reply received from 
         user ${sender} and page ${recipient} with text ${text} and payload 
         ${quickReplyPayload}`)
       return
     }
-    // When a message has been send to your page
+    // When a message has been send TO your page
     if (text) {
       console.log(`${seq}-${mid}-${timeOfMessage}: Received message from user 
         ${sender} and page ${recipient} with  text ${text}`)
     } else if (attachment) {
       let attachmentType = message.attachments[0].type
+
       console.log(`${seq}-${mid}-${timeOfMessage}: Received message from user 
         ${sender} and page ${recipient} with attachment of type ${attachmentType}`)
     }
   }
 
-  /*
-   * Delivery Confirmation Event
+   /**
+   * This method is called when a Delivery Confirmation Event occurs.
    *
+   * @param {Object} event - The delivery confirmation event
    */
   receivedDeliveryConfirmation (event) {
     var sender = event.sender.id
@@ -102,9 +111,10 @@ class Messenger {
     console.log(`All messages before ${watermark} were delivered`)
   }
 
-  /*
-   * Postback Event
+   /**
+   * This method is called when a Postback Event occurs.
    *
+   * @param {Object} event - The postback event
    */
   receivedPostback (event) {
     var sender = event.sender.id
@@ -116,9 +126,10 @@ class Messenger {
       payload ${payload} at ${timeOfPostback}`)
   }
 
-  /*
-   * Message Read Event
+   /**
+   * This method is called when a Message Read Event occurs.
    *
+   * @param {Object} event - The message read event
    */
   receivedReadConfirmation (event) {
     var sender = event.sender.id
@@ -131,9 +142,10 @@ class Messenger {
       and page ${recipient} before ${watermark}`)
   }
 
-  /*
-   * Message Account Linking Event
+   /**
+   * This method is called when a Message Account linking Event occurs.
    *
+   * @param {Object} event - The message account linking event
    */
   receivedAccountLinking (event) {
     var sender = event.sender.id
@@ -152,19 +164,22 @@ class Messenger {
     }
   }
 
-  /*
-   * Messange event dispatcher
+   /**
+   * This method handles all the POST calls sent to our webhook.
    *
+   * @param {Object} data - The
+   * @param {Function} cb - The callback function
    */
-  messageDispatcher (data, cb) {
+  messageDispatcher (response, data, cb) {
     // Check that this is a page subscription
     if (data.object === 'page') {
+      // Iterate over each entry - There may be multiple if batched
       data.entry.forEach((pageEntry) => {
         var pageId = pageEntry.id
         var timeOfEvent = pageEntry.time
 
         console.log(`New message event from page ${pageId} at ${timeOfEvent}`)
-
+        // Iterate over each messaging event
         pageEntry.messaging.forEach((event) => {
           if (event.message) {
             this.receivedMessage(event)
@@ -184,11 +199,18 @@ class Messenger {
         })
       })
     }
+    // If all went well, send back a 200 (within 20 seconds) to let FB know you've
+    // successfully received the callback. Otherwise, the request will time out.
+    response.sendStatus(200)
   }
 
-  /*
-   * Send a plain text message
+   /**
+   * This method will send a plain Text Message.
    *
+   * @param {String} recipient - The user id to whom we're sending the text message
+   * @param {String} text - The text message (required)
+   * @param {String} notificationType - The notification type
+   * @param {Function} cb - The callback function
    */
   sendTextMessage (recipient, text, notificationType, cb) {
     var message = {
@@ -197,10 +219,15 @@ class Messenger {
     this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
-  /*
-   * Send a file attachment (image, audio, video or file)
-   * image supported formats [jpg, png and gifs]
+   /**
+   * This method will send a file attachment. The file type must be image, audio, video or file).
+   * Image supported formats [jpg, png and gifs]
    *
+   * @param {String} recipient - The user id to whom we're sending the text message
+   * @param {String} fileType - The file type (required) ['image', 'audio', 'video' or 'file']
+   * @param {String} fileUrl - The file url where it is hosted (required)
+   * @param {String} notificationType - The notification type
+   * @param {Function} cb - The callback function
    */
   sendFileMessage (recipient, fileType, fileUrl, notificationType, cb) {
     var message = {
@@ -214,29 +241,42 @@ class Messenger {
     this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
-  /*
-   * Send a button message
+   /**
+   * This method will send a text and buttons attachment to request input from the user.
+   * The buttons can open a URL, or make a back-end call to your webhook.
    *
+   * @param {String} recipient - The user id to whom we're sending the text message
+   * @param {Array of button} buttons - Set of buttons that appear as call-to-actions
+   * @param {String} notificationType - The notification type
+   * @param {Function} cb - The callback function
    */
-  sendButtonMessage (recipient, buttonTemplate, notificationType, cb) {
+  sendButtonMessage (recipient, buttons, notificationType, cb) {
+    // TODO: test buttons object
     var message = {
       attachment: {
         type: 'template',
         payload: {
           template_type: 'button',
-          text: buttonTemplate.text,
-          buttons: buttonTemplate.buttons
+          text: buttons.text,  // {String} text - Text that appears in main body (required)
+          buttons: buttons.buttons // {Array of Buttons} buttons - Set of buttons that appear as call-to-actions (required)
         }
       }
     }
     this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
-  /*
-   * Send a Structured Message
+   /**
+   * This method will send a Structured Generic Message, to send a horizontal scrollable carousel of items,
+   * each composed of an image attachment, short description and buttons to request input from the user.
+   * The buttons can open a URL, or make a back-end call to your webhook.
    *
+   * @param {String} recipient - The user id to whom we're sending the text message
+   * @param {Array of element} elements - Data for each bubble in message (required)
+   * @param {String} notificationType - The notification type
+   * @param {Function} cb - The callback function
    */
   sendGenericMessage (recipient, elements, notificationType, cb) {
+    // TODO: test elements object
     var message = {
       attachment: {
         type: 'template',
@@ -249,11 +289,17 @@ class Messenger {
     this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
-  /*
-   * Send a receipt message
+   /**
+   * This method will send a Receipt Message, to send a order confirmation,
+   * with the transaction summary and description for each item.
    *
+   * @param {String} recipient - The user id to whom we're sending the text message
+   * @param {Object} receipt - The Receipt Template (required)
+   * @param {String} notificationType - The notification type
+   * @param {Function} cb - The callback function
    */
   sendReceiptMessage (recipient, receipt, notificationType, cb) {
+    // TODO: test the 'receipt' payload object
     var message = {
       attachment: {
         type: 'template',
@@ -275,11 +321,20 @@ class Messenger {
     this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
-  /*
-   * Send a quick reply message.
+   /**
+   * This method will send a Quick Replies Message. Quick Replies appear prominently
+   * above the composer, with they keyboard less prominent. When a button is tapped,
+   * the message is sent in the conversation with developer-defined metadata in the callback.
+   * After a button is tapped, the buttons are dismissed preventing the issue where
+   * users could tap on buttons attached to old messages in a conversation.
    *
+   * @param {String} recipient - The user id to whom we're sending the text message
+   * @param {Array of quick_reply} quickReplies - The quick reply Template (required)
+   * @param {String} notificationType - The notification type
+   * @param {Function} cb - The callback function
    */
   sendQuickMessage (recipient, quickReplies, notificationType, cb) {
+    // TODO: test quick_reply object, attachments cand be send besides text
     var message = {
       text: quickReplies.text,
       quick_replies: quickReplies.quick_replies
@@ -287,11 +342,16 @@ class Messenger {
     this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
-  /*
-   * Send an airplane itinerary message
+   /**
+   * This method will send an Airplane Itinerary Message, that contains the itinerary and receipt.
    *
+   * @param {String} recipient - The user id to whom we're sending the text message
+   * @param {Object} itinerary - The payload of itinerary template (required)
+   * @param {String} notificationType - The notification type
+   * @param {Function} cb - The callback function
    */
   sendItineraryMessage (recipient, itinerary, notificationType, cb) {
+    // TODO: test itinerary Template
     var message = {
       attachment: {
         type: 'template',
@@ -315,11 +375,16 @@ class Messenger {
     this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
-  /*
-   * Send an airplane check-in reminder message
+   /**
+   * This method will send an Airplane Check-In Reminder Message.
    *
+   * @param {String} recipient - The user id to whom we're sending the text message
+   * @param {Object} checkin - The payload of checkin template (required)
+   * @param {String} notificationType - The notification type
+   * @param {Function} cb - The callback function
    */
   sendCheckinMessage (recipient, checkin, notificationType, cb) {
+    // TODO: test checkin Template
     var message = {
       attachment: {
         type: 'template',
@@ -337,11 +402,17 @@ class Messenger {
     this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
-  /*
-   * Send an Airplane Boarding Pass message
+   /**
+   * This method will send an Airplane Boarding Pass Message, that contains boarding
+   * passes for one or more flights or one more passengers
    *
+   * @param {String} recipient - The user id to whom we're sending the text message
+   * @param {Object} boardingpass - The payload of boarding pass template (required)
+   * @param {String} notificationType - The notification type
+   * @param {Function} cb - The callback function
    */
   sendBoardingpassMessage (recipient, boardingpass, notificationType, cb) {
+    // TODO: test boardingpass payload.
     var message = {
       attachment: {
         type: 'template',
@@ -357,12 +428,16 @@ class Messenger {
     this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
-  /*
-   * Send a flight update message
-   * update_type must be delay, gate_change or cancellation
+   /**
+   * This method will send an Airplane Flight Update Message.
    *
+   * @param {String} recipient - The user id to whom we're sending the text message
+   * @param {Object} flightupdate - The payload of flight update template (required)
+   * @param {String} notificationType - The notification type
+   * @param {Function} cb - The callback function
    */
   sendFlightupdateMessage (recipient, flightupdate, notificationType, cb) {
+    // TODO: test flightupdate payload.
     var message = {
       attachment: {
         type: 'template',
@@ -399,11 +474,16 @@ class Messenger {
     this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
-  /*
-   * Send a message to a user.
+   /**
+   * This method will send a message to the user.
    *
+   * @param {String} recipient - The user id to whom we're sending the text message
+   * @param {Object} message - The message object (required)
+   * @param {String} notificationType - The notification type
+   * @param {Function} cb - The callback function
    */
   sendApiMessage (recipient, message, notificationType, cb) {
+    // TODO: test message object
     if (typeof notificationType === 'function') {
       cb = notificationType
       notificationType = this.notificationType
@@ -434,14 +514,20 @@ class Messenger {
     sendRequest(req, cb)
   }
 
-  /*
-   * Send Sender Actions
+   /**
+   * This method will send Sender Actions, this are typing indicators or send read receipts,
+   * to let the user know you are processing their request
    *
+   * @param {String} recipient - The user id to whom we're sending the text message
+   * @param {String} senderAction - The action typing indicator (required)
+   * @param {Function} cb - The callback function
    */
   sendSenderAction (recipient, senderAction, cb) {
+    /*
     if (!recipient.id && !recipient.phoneNumber) {
       throw new Error('Sender action error: recipient id or phone number must be set')
     }
+    */
     const req = {
       url: `${apiUrl}me/messages`,
       qs: {

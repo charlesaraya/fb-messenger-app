@@ -64,7 +64,7 @@ There's a build-in dispatcher that handles all messaging events
 ```js 
 app.post('/webhook', function (req, res) {
   var data = req.body
-  messenger.messageDispatcher(data)
+  messenger.messageDispatcher(res, data)
 })
 ```
 
