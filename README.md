@@ -143,11 +143,11 @@ messenger.sendSenderAction(recipient, senderAction[, cb])
 
 messenger.getUserProfile(userId[, cb])
 
-messenger.setGreetingText(message[, cb])
+messenger.setGreetingText(greeting[, cb])
 
 messenger.setGetStartedButton(message[, cb])
 
-messenger.setPersistentMenu(items[, cb])
+messenger.setPersistentMenu(menuItems[, cb])
 
 messenger.sendThreadSettingsRequest(method, params[, cb])
 

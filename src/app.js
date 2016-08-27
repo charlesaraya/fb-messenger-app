@@ -548,28 +548,34 @@ class Messenger {
     sendRequest(req, cb)
   }
 
-  /*
-   * Set a greeting text
+   /**
+   * This method will set a Greeting Text, for new conversations.
    *
+   * @param {String} greeting - The greeting text
+   * @param {Function} cb - The callback function
    */
-  setGreetingText (message, cb) {
-    if (typeof message === 'string') {
-      message = {text: message}
+  setGreetingText (greeting, cb) {
+    // TODO: test greeting object
+    if (typeof greeting === 'string') {
+      greeting = {text: greeting}
     }
     var method = 'POST'
     var params = {
       setting_type: 'greeting',
-      greeting: message
+      greeting: greeting
     }
     this.sendThreadSettingsRequest(method, params, cb)
   }
 
-  /*
-   * Set a Get Started Button
+   /**
+   * This method will set a Get Started Button, in the welcome screen.
    *
+   * @param {Array of payload Strings} greeting - The array of payloads
+   * @param {Function} cb - The callback function
    */
   setGetStartedButton (message, cb) {
-    if (typeof message === 'string') {
+    // TODO: test message (1+ payloads), button was succesfully set/succsefully removed?
+    if (typeof message === 'string') {  // Case a string is entered
       message = [{
         payload: message
       }]
@@ -585,25 +591,32 @@ class Messenger {
     this.sendThreadSettingsRequest(method, params, cb)
   }
 
-  /*
-   * Set a Persistent Menu
+   /**
+   * This method will set a Persistent Menu, always available to the user.
    *
+   * @param {Array of menu_item objects} menuItems - The menu items
+   * @param {Function} cb - The callback function
    */
-  setPersistentMenu (items, cb) {
+  setPersistentMenu (menuItems, cb) {
+    // TODO: test menuItems (menu_item object, etc.)
     var method = 'POST'
     var params = {
       setting_type: 'call_to_actions',
       thread_state: 'existing_thread',
-      call_to_actions: items
+      call_to_actions: menuItems
     }
     this.sendThreadSettingsRequest(method, params, cb)
   }
 
-  /*
-   * Delete Thread Setting [Get Started Button('new_thread') or Persistent Menu('existing_thread')]
+   /**
+   * This method will delete a Thread Setting. Get Started Button('new_thread')
+   * or Persistent Menu('existing_thread')
    *
+   * @param {String} threadType - The thread type to be deleted
+   * @param {Function} cb - The callback function
    */
   deleteThreadSetting (threadType, cb) {
+    // TODO: test threadType
     var method = 'DELETE'
     var params = {
       setting_type: 'call_to_actions',
@@ -612,9 +625,12 @@ class Messenger {
     this.sendThreadSettingsRequest(method, params, cb)
   }
 
-  /*
-   * Configure the Thread Settings on Messenger
+   /**
+   * This method will Configure the Thread Setting on Messenger.
    *
+   * @param {String} method - The call request (POST or DELETE)
+   * @param {Object} params - The configuration parameters
+   * @param {Function} cb - The callback function
    */
   sendThreadSettingsRequest (method, params, cb) {
     const req = {
@@ -631,6 +647,12 @@ class Messenger {
   /*
    * Retrieve the user page-scoped ID (PSID) using the account linking endpoint
    *
+   */
+   /**
+   * This method will set a Greeting Text, for new conversations.
+   *
+   * @param {String} greeting - The greeting text
+   * @param {Function} cb - The callback function
    */
   getUserPsid (token, cb) {
     const req = {
@@ -650,6 +672,12 @@ class Messenger {
    * Unlink Account
    *
    */
+   /**
+   * This method will set a Greeting Text, for new conversations.
+   *
+   * @param {String} greeting - The greeting text
+   * @param {Function} cb - The callback function
+   */
   unlinkAccount (psid, cb) {
     const req = {
       url: `${apiUrl}me/unlink_accounts`,
@@ -667,6 +695,12 @@ class Messenger {
   /*
    * Account linking call-2-action
    *
+   */
+   /**
+   * This method will set a Greeting Text, for new conversations.
+   *
+   * @param {String} greeting - The greeting text
+   * @param {Function} cb - The callback function
    */
   sendAccountLinking (recipient, text, serverUrl, cb) {
     var message = {
@@ -689,6 +723,12 @@ class Messenger {
    * Get the User Profile
    *
    */
+   /**
+   * This method will set a Greeting Text, for new conversations.
+   *
+   * @param {String} greeting - The greeting text
+   * @param {Function} cb - The callback function
+   */
   getUserProfile (userId, cb) {
     const req = {
       url: `${apiUrl}${userId}`,
@@ -705,6 +745,12 @@ class Messenger {
   /*
    * Helper function
    *
+   */
+   /**
+   * This method will set a Greeting Text, for new conversations.
+   *
+   * @param {String} greeting - The greeting text
+   * @param {Function} cb - The callback function
    */
   getAttachmentType (attachment) {
     switch (attachment[0].type) {
@@ -731,10 +777,16 @@ class Messenger {
   // Internal Errors, Rate Limited Errors, Bad Parameter Errors, Access Token Errors, Permission Errors, User Block Errors, Account Linking Errors. read more at https://developers.facebook.com/docs/messenger-platform/send-api-reference#errors
 }
 
-  /*
-   * Send Request to API
-   *
-   */
+/*
+ * Send Request to API
+ *
+ */
+ /**
+ * This method will set a Greeting Text, for new conversations.
+ *
+ * @param {String} greeting - The greeting text
+ * @param {Function} cb - The callback function
+ */
 const sendRequest = (req, cb) => {
   request(req, (error, response, body) => {
     if (!cb) return
