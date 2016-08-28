@@ -159,9 +159,7 @@ messenger.getUserPsid(tokeb[, cb])
 
 messenger.unlinkAccount(psid[, cb])
 
-messenger.sendAccountLinking(recipient, text, serverUrl[, cb])
-
-messenger.getAttachmentType(attachment)  //Helper function
+messenger.sendAccountLinking(recipient, title, imageUrl, serverUrl[, cb])
 ```
 
 #### Notification Types

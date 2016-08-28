@@ -2,7 +2,12 @@ import request from 'request'
 
 const apiUrl = 'https://graph.facebook.com/v2.6/'
 
-// TODO: closing the browser (Read at https://developers.facebook.com/docs/messenger-platform/send-api-reference/button-template#close_window)
+/* TODO
+ * - Closing the browser. (Read at https://developers.facebook.com/docs/messenger-platform/send-api-reference/button-template#close_window)
+ * - Control Error of functin params
+ * - Tests
+ * - Send API request fails. Internal Errors, Rate Limited Errors, Bad Parameter Errors, Access Token Errors, Permission Errors, User Block Errors, Account Linking Errors. read more at https://developers.facebook.com/docs/messenger-platform/send-api-reference#errors
+ */
 
 class Messenger {
 
@@ -644,14 +649,11 @@ class Messenger {
     sendRequest(req, cb)
   }
 
-  /*
-   * Retrieve the user page-scoped ID (PSID) using the account linking endpoint
-   *
-   */
    /**
-   * This method will set a Greeting Text, for new conversations.
+   * This method will retrieve the user page-scoped ID (PSID) using the account
+   * linking endpoint.
    *
-   * @param {String} greeting - The greeting text
+   * @param {String} token - The account linking token
    * @param {Function} cb - The callback function
    */
   getUserPsid (token, cb) {
@@ -668,14 +670,10 @@ class Messenger {
     sendRequest(req, cb)
   }
 
-  /*
-   * Unlink Account
-   *
-   */
    /**
-   * This method will set a Greeting Text, for new conversations.
+   * This method will unlink the user account.
    *
-   * @param {String} greeting - The greeting text
+   * @param {String} psid - A valid page-scoped ID (PSID)
    * @param {Function} cb - The callback function
    */
   unlinkAccount (psid, cb) {
@@ -692,26 +690,28 @@ class Messenger {
     sendRequest(req, cb)
   }
 
-  /*
-   * Account linking call-2-action
-   *
-   */
    /**
-   * This method will set a Greeting Text, for new conversations.
+   * This method will send an account linking call-2-action to the user.
    *
-   * @param {String} greeting - The greeting text
+   * @param {String} recipient - The user id to whom we're sending the text message
+   * @param {String} title - The title of the account linking CTA
+   * @param {String} imageUrl - The URL of the image in the account linking CTA
+   * @param {String} serverUrl - The Authentication callback URL
    * @param {Function} cb - The callback function
    */
-  sendAccountLinking (recipient, text, serverUrl, cb) {
+  sendAccountLinking (recipient, title, imageUrl, serverUrl, cb) {
     var message = {
       attachment: {
         type: 'tempalte',
         payload: {
-          template_type: 'button',
-          text: text,
-          buttons: [{
-            type: 'account_link',
-            url: `${serverUrl}/authorize`
+          template_type: 'generic',
+          elements: [{
+            title: title,
+            image_url: imageUrl,
+            buttons: [{
+              type: 'account_link',
+              url: `${serverUrl}/authorize`
+            }]
           }]
         }
       }
@@ -719,17 +719,15 @@ class Messenger {
     this.sendApiMessage(recipient, message, cb)
   }
 
-  /*
-   * Get the User Profile
-   *
-   */
    /**
-   * This method will set a Greeting Text, for new conversations.
+   * This method will get the User Profile, used to query more information about
+   * the user, and personalize the experience further.
    *
-   * @param {String} greeting - The greeting text
+   * @param {String} userId - The user id
    * @param {Function} cb - The callback function
    */
   getUserProfile (userId, cb) {
+    // TODO: test selected fields
     const req = {
       url: `${apiUrl}${userId}`,
       qs: {
@@ -741,50 +739,12 @@ class Messenger {
     }
     sendRequest(req, cb)
   }
-
-  /*
-   * Helper function
-   *
-   */
-   /**
-   * This method will set a Greeting Text, for new conversations.
-   *
-   * @param {String} greeting - The greeting text
-   * @param {Function} cb - The callback function
-   */
-  getAttachmentType (attachment) {
-    switch (attachment[0].type) {
-      case ('image'):
-        return 'image'
-      case ('audio'):
-        return 'audio'
-      case ('video'):
-        return 'video'
-      case ('file'):
-        return 'file'
-      case ('location'):
-        return 'location'
-      case ('template'):
-        return 'template'
-      case ('fallback'):
-        return 'fallback'
-      default:
-        return 'undefined'
-    }
-  }
-
-  // TODO: Send API request fails
-  // Internal Errors, Rate Limited Errors, Bad Parameter Errors, Access Token Errors, Permission Errors, User Block Errors, Account Linking Errors. read more at https://developers.facebook.com/docs/messenger-platform/send-api-reference#errors
 }
 
-/*
- * Send Request to API
- *
- */
  /**
- * This method will set a Greeting Text, for new conversations.
+ * This method will send a Request to the Send API.
  *
- * @param {String} greeting - The greeting text
+ * @param {Object} req - The request being send
  * @param {Function} cb - The callback function
  */
 const sendRequest = (req, cb) => {
