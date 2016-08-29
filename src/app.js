@@ -9,19 +9,25 @@ const apiUrl = 'https://graph.facebook.com/v2.6/'
  * - Send API request fails. Internal Errors, Rate Limited Errors, Bad Parameter Errors, Access Token Errors, Permission Errors, User Block Errors, Account Linking Errors. read more at https://developers.facebook.com/docs/messenger-platform/send-api-reference#errors
  */
 
+/** Class representing a Facebook Messenger App. */
 class Messenger {
-
+  /**
+   * Create a Messenger.
+   *
+   * @param {string} [token=null] - The Facebook Page Access Token.
+   * @param {string} [notificationType=REGULAR] - The default message notification type.
+   */
   constructor (token = null, notificationType = 'REGULAR') {
     this.token = token
     this.notificationType = notificationType
 
-    if (!this.token) throw new Error('Facebook Page token is missing')
+    if (!this.token) throw new Error('Facebook Page access token is missing.')
   }
 
    /**
    * This method will subscribe App via API
    *
-   * @param {Function} cb - The callback function
+   * @callback [cb] - The callback function
    */
   subscribeApp (cb) {
     const req = {
@@ -38,7 +44,7 @@ class Messenger {
    /**
    * This method is called when an Authentication Event occurs.
    *
-   * @param {Object} event - The authentication event
+   * @param {object} event - The authentication event
    */
   receivedAuthentication (event) {
     var sender = event.sender.id
@@ -53,7 +59,7 @@ class Messenger {
    /**
    * This method is called when a Message Event occurs.
    *
-   * @param {Object} event - The message event
+   * @param {object} event - The message event
    */
   receivedMessage (event) {
     var sender = event.sender.id
@@ -98,7 +104,7 @@ class Messenger {
    /**
    * This method is called when a Delivery Confirmation Event occurs.
    *
-   * @param {Object} event - The delivery confirmation event
+   * @param {object} event - The delivery confirmation event
    */
   receivedDeliveryConfirmation (event) {
     var sender = event.sender.id
@@ -119,7 +125,7 @@ class Messenger {
    /**
    * This method is called when a Postback Event occurs.
    *
-   * @param {Object} event - The postback event
+   * @param {object} event - The postback event
    */
   receivedPostback (event) {
     var sender = event.sender.id
@@ -134,7 +140,7 @@ class Messenger {
    /**
    * This method is called when a Message Read Event occurs.
    *
-   * @param {Object} event - The message read event
+   * @param {object} event - The message read event
    */
   receivedReadConfirmation (event) {
     var sender = event.sender.id
@@ -150,7 +156,7 @@ class Messenger {
    /**
    * This method is called when a Message Account linking Event occurs.
    *
-   * @param {Object} event - The message account linking event
+   * @param {object} event - The message account linking event
    */
   receivedAccountLinking (event) {
     var sender = event.sender.id
@@ -172,8 +178,9 @@ class Messenger {
    /**
    * This method handles all the POST calls sent to our webhook.
    *
-   * @param {Object} data - The
-   * @param {Function} cb - The callback function
+   * @param {object} response - The response that will be sent to facebook
+   * @param {object} data - The data received at our webhook
+   * @callback [cb] - The callback function
    */
   messageDispatcher (response, data, cb) {
     // Check that this is a page subscription
@@ -212,10 +219,10 @@ class Messenger {
    /**
    * This method will send a plain Text Message.
    *
-   * @param {String} recipient - The user id to whom we're sending the text message
-   * @param {String} text - The text message (required)
-   * @param {String} notificationType - The notification type
-   * @param {Function} cb - The callback function
+   * @param {string} recipient - The user id that will receive the message
+   * @param {string} text - The text message (required)
+   * @param {string} [notificationType] - The notification type
+   * @callback [cb] - The callback function
    */
   sendTextMessage (recipient, text, notificationType, cb) {
     var message = {
@@ -228,11 +235,11 @@ class Messenger {
    * This method will send a file attachment. The file type must be image, audio, video or file).
    * Image supported formats [jpg, png and gifs]
    *
-   * @param {String} recipient - The user id to whom we're sending the text message
-   * @param {String} fileType - The file type (required) ['image', 'audio', 'video' or 'file']
-   * @param {String} fileUrl - The file url where it is hosted (required)
-   * @param {String} notificationType - The notification type
-   * @param {Function} cb - The callback function
+   * @param {string} recipient - The user id to whom we're sending the text message
+   * @param {string} fileType - The file type (required) ['image', 'audio', 'video' or 'file']
+   * @param {string} fileUrl - The file url where it is hosted (required)
+   * @param {string} [notificationType] - The notification type
+   * @callback [cb] - The callback function
    */
   sendFileMessage (recipient, fileType, fileUrl, notificationType, cb) {
     var message = {
@@ -250,20 +257,21 @@ class Messenger {
    * This method will send a text and buttons attachment to request input from the user.
    * The buttons can open a URL, or make a back-end call to your webhook.
    *
-   * @param {String} recipient - The user id to whom we're sending the text message
-   * @param {Array of button} buttons - Set of buttons that appear as call-to-actions
-   * @param {String} notificationType - The notification type
-   * @param {Function} cb - The callback function
+   * @param {string} recipient - The user id to whom we're sending the text message
+   * @param {string} text - The head text of the button message
+   * @param {object[]} buttons - The Set of call-to-action buttons
+   * @param {string} [notificationType] - The notification type
+   * @callback [cb] - The callback function
    */
-  sendButtonMessage (recipient, buttons, notificationType, cb) {
+  sendButtonMessage (recipient, text, buttons, notificationType, cb) {
     // TODO: test buttons object
     var message = {
       attachment: {
         type: 'template',
         payload: {
           template_type: 'button',
-          text: buttons.text,  // {String} text - Text that appears in main body (required)
-          buttons: buttons.buttons // {Array of Buttons} buttons - Set of buttons that appear as call-to-actions (required)
+          text: text,
+          buttons: buttons
         }
       }
     }
@@ -275,10 +283,10 @@ class Messenger {
    * each composed of an image attachment, short description and buttons to request input from the user.
    * The buttons can open a URL, or make a back-end call to your webhook.
    *
-   * @param {String} recipient - The user id to whom we're sending the text message
-   * @param {Array of element} elements - Data for each bubble in message (required)
-   * @param {String} notificationType - The notification type
-   * @param {Function} cb - The callback function
+   * @param {string} recipient - The user id to whom we're sending the text message
+   * @param {object[]} elements - The Data for each bubble in message
+   * @param {string} [notificationType] - The notification type
+   * @callback [cb] - The callback function
    */
   sendGenericMessage (recipient, elements, notificationType, cb) {
     // TODO: test elements object
@@ -298,10 +306,20 @@ class Messenger {
    * This method will send a Receipt Message, to send a order confirmation,
    * with the transaction summary and description for each item.
    *
-   * @param {String} recipient - The user id to whom we're sending the text message
-   * @param {Object} receipt - The Receipt Template (required)
-   * @param {String} notificationType - The notification type
-   * @param {Function} cb - The callback function
+   * @param {string} recipient - The receipient user id.
+   * @param {object} receipt - The Receipt Template
+   * @param {string} receipt.recipient_name - The recipient's name.
+   * @param {string} receipt.order_number - The order number (must be unique).
+   * @param {string} receipt.currency - The currency for order.
+   * @param {string} receipt.payment_method - The payment method details. Can be a custom string. ex: "Visa 1234"..
+   * @param {string} [receipt.order_url] - The URL of the order.
+   * @param {string} [receipt.timestamp] - The timestamp of the order, in seconds.
+   * @param {object[]} receipt.elements - The items in order.
+   * @param {object} [receipt.address] - The shipping address.
+   * @param {object} receipt.summary - The payment summary.
+   * @param {object[]} [receipt.adjustments] - The payment adjustments.
+   * @param {string} [notificationType] - The notification type
+   * @callback [cb] - The callback function
    */
   sendReceiptMessage (recipient, receipt, notificationType, cb) {
     // TODO: test the 'receipt' payload object
@@ -317,8 +335,8 @@ class Messenger {
           order_url: receipt.order_url,
           timestamp: receipt.timestamp,
           elements: receipt.shopping_cart,
-          address: receipt.recipient_address,
-          summary: receipt.order_summary,
+          address: receipt.address,
+          summary: receipt.summary,
           adjustments: receipt.adjustments
         }
       }
@@ -327,22 +345,19 @@ class Messenger {
   }
 
    /**
-   * This method will send a Quick Replies Message. Quick Replies appear prominently
-   * above the composer, with they keyboard less prominent. When a button is tapped,
-   * the message is sent in the conversation with developer-defined metadata in the callback.
-   * After a button is tapped, the buttons are dismissed preventing the issue where
-   * users could tap on buttons attached to old messages in a conversation.
+   * This method will send a Quick Replies Message.
    *
-   * @param {String} recipient - The user id to whom we're sending the text message
-   * @param {Array of quick_reply} quickReplies - The quick reply Template (required)
-   * @param {String} notificationType - The notification type
-   * @param {Function} cb - The callback function
+   * @param {string} recipient - The user id to whom we're sending the text message
+   * @param {string} text - The message text
+   * @param {object[]} quickReplies - The quick replies to be sent with messages
+   * @param {string} [notificationType] - The notification type
+   * @callback [cb] - The callback function
    */
-  sendQuickMessage (recipient, quickReplies, notificationType, cb) {
-    // TODO: test quick_reply object, attachments cand be send besides text
+  sendQuickMessage (recipient, text, quickReplies, notificationType, cb) {
+    // TODO: test quickReplies, test ({object} attachments|{string} text)
     var message = {
-      text: quickReplies.text,
-      quick_replies: quickReplies.quick_replies
+      text: text,
+      quick_replies: quickReplies
     }
     this.sendApiMessage(recipient, message, notificationType, cb)
   }
@@ -350,10 +365,10 @@ class Messenger {
    /**
    * This method will send an Airplane Itinerary Message, that contains the itinerary and receipt.
    *
-   * @param {String} recipient - The user id to whom we're sending the text message
-   * @param {Object} itinerary - The payload of itinerary template (required)
-   * @param {String} notificationType - The notification type
-   * @param {Function} cb - The callback function
+   * @param {string} recipient - The user id to whom we're sending the text message
+   * @param {object} itinerary - The payload of itinerary template (required)
+   * @param {string} [notificationType] - The notification type
+   * @callback [cb] - The callback function
    */
   sendItineraryMessage (recipient, itinerary, notificationType, cb) {
     // TODO: test itinerary Template
@@ -383,10 +398,10 @@ class Messenger {
    /**
    * This method will send an Airplane Check-In Reminder Message.
    *
-   * @param {String} recipient - The user id to whom we're sending the text message
-   * @param {Object} checkin - The payload of checkin template (required)
-   * @param {String} notificationType - The notification type
-   * @param {Function} cb - The callback function
+   * @param {string} recipient - The user id to whom we're sending the text message
+   * @param {object} checkin - The payload of checkin template (required)
+   * @param {string} [notificationType] - The notification type
+   * @callback [cb] - The callback function
    */
   sendCheckinMessage (recipient, checkin, notificationType, cb) {
     // TODO: test checkin Template
@@ -411,10 +426,10 @@ class Messenger {
    * This method will send an Airplane Boarding Pass Message, that contains boarding
    * passes for one or more flights or one more passengers
    *
-   * @param {String} recipient - The user id to whom we're sending the text message
-   * @param {Object} boardingpass - The payload of boarding pass template (required)
-   * @param {String} notificationType - The notification type
-   * @param {Function} cb - The callback function
+   * @param {string} recipient - The user id to whom we're sending the text message
+   * @param {object} boardingpass - The payload of boarding pass template (required)
+   * @param {string} [notificationType] - The notification type
+   * @callback [cb] - The callback function
    */
   sendBoardingpassMessage (recipient, boardingpass, notificationType, cb) {
     // TODO: test boardingpass payload.
@@ -436,10 +451,10 @@ class Messenger {
    /**
    * This method will send an Airplane Flight Update Message.
    *
-   * @param {String} recipient - The user id to whom we're sending the text message
-   * @param {Object} flightupdate - The payload of flight update template (required)
-   * @param {String} notificationType - The notification type
-   * @param {Function} cb - The callback function
+   * @param {string} recipient - The user id to whom we're sending the text message
+   * @param {object} flightupdate - The payload of flight update template (required)
+   * @param {string} [notificationType] - The notification type
+   * @callback [cb] - The callback function
    */
   sendFlightupdateMessage (recipient, flightupdate, notificationType, cb) {
     // TODO: test flightupdate payload.
@@ -482,10 +497,10 @@ class Messenger {
    /**
    * This method will send a message to the user.
    *
-   * @param {String} recipient - The user id to whom we're sending the text message
-   * @param {Object} message - The message object (required)
-   * @param {String} notificationType - The notification type
-   * @param {Function} cb - The callback function
+   * @param {string} recipient - The user id to whom we're sending the text message
+   * @param {object} message - The message object (required)
+   * @param {string} [notificationType] - The notification type
+   * @callback [cb] - The callback function
    */
   sendApiMessage (recipient, message, notificationType, cb) {
     // TODO: test message object
@@ -523,9 +538,9 @@ class Messenger {
    * This method will send Sender Actions, this are typing indicators or send read receipts,
    * to let the user know you are processing their request
    *
-   * @param {String} recipient - The user id to whom we're sending the text message
-   * @param {String} senderAction - The action typing indicator (required)
-   * @param {Function} cb - The callback function
+   * @param {string} recipient - The user id to whom we're sending the text message
+   * @param {string} senderAction - The action typing indicator (required)
+   * @callback [cb] - The callback function
    */
   sendSenderAction (recipient, senderAction, cb) {
     /*
@@ -554,10 +569,10 @@ class Messenger {
   }
 
    /**
-   * This method will set a Greeting Text, for new conversations.
+   * This method will set a Greeting Text.
    *
-   * @param {String} greeting - The greeting text
-   * @param {Function} cb - The callback function
+   * @param {string} greeting - The greeting text
+   * @callback [cb] - The callback function
    */
   setGreetingText (greeting, cb) {
     // TODO: test greeting object
@@ -575,23 +590,21 @@ class Messenger {
    /**
    * This method will set a Get Started Button, in the welcome screen.
    *
-   * @param {Array of payload Strings} greeting - The array of payloads
-   * @param {Function} cb - The callback function
+   * @param {Array of payload} payload - The array of payload
+   * @callback [cb] - The callback function
    */
-  setGetStartedButton (message, cb) {
+  setGetStartedButton (payload, cb) {
     // TODO: test message (1+ payloads), button was succesfully set/succsefully removed?
-    if (typeof message === 'string') {  // Case a string is entered
-      message = [{
-        payload: message
+    if (typeof payload === 'string') {  // Case a string is entered
+      payload = [{
+        payload: payload
       }]
     }
     var method = 'POST'
     var params = {
       setting_type: 'call_to_actions',
       thread_state: 'new_thread',
-      call_to_actions: {
-        payload: message
-      }
+      call_to_actions: payload
     }
     this.sendThreadSettingsRequest(method, params, cb)
   }
@@ -600,7 +613,7 @@ class Messenger {
    * This method will set a Persistent Menu, always available to the user.
    *
    * @param {Array of menu_item objects} menuItems - The menu items
-   * @param {Function} cb - The callback function
+   * @callback [cb] - The callback function
    */
   setPersistentMenu (menuItems, cb) {
     // TODO: test menuItems (menu_item object, etc.)
@@ -617,8 +630,8 @@ class Messenger {
    * This method will delete a Thread Setting. Get Started Button('new_thread')
    * or Persistent Menu('existing_thread')
    *
-   * @param {String} threadType - The thread type to be deleted
-   * @param {Function} cb - The callback function
+   * @param {string} threadType - The thread type to be deleted
+   * @callback [cb] - The callback function
    */
   deleteThreadSetting (threadType, cb) {
     // TODO: test threadType
@@ -633,9 +646,9 @@ class Messenger {
    /**
    * This method will Configure the Thread Setting on Messenger.
    *
-   * @param {String} method - The call request (POST or DELETE)
-   * @param {Object} params - The configuration parameters
-   * @param {Function} cb - The callback function
+   * @param {string} method - The call request (POST or DELETE)
+   * @param {object} params - The configuration parameters
+   * @callback [cb] - The callback function
    */
   sendThreadSettingsRequest (method, params, cb) {
     const req = {
@@ -653,8 +666,8 @@ class Messenger {
    * This method will retrieve the user page-scoped ID (PSID) using the account
    * linking endpoint.
    *
-   * @param {String} token - The account linking token
-   * @param {Function} cb - The callback function
+   * @param {string} token - The account linking token
+   * @callback [cb] - The callback function
    */
   getUserPsid (token, cb) {
     const req = {
@@ -673,8 +686,8 @@ class Messenger {
    /**
    * This method will unlink the user account.
    *
-   * @param {String} psid - A valid page-scoped ID (PSID)
-   * @param {Function} cb - The callback function
+   * @param {string} psid - A valid page-scoped ID (PSID)
+   * @callback [cb] - The callback function
    */
   unlinkAccount (psid, cb) {
     const req = {
@@ -693,11 +706,11 @@ class Messenger {
    /**
    * This method will send an account linking call-2-action to the user.
    *
-   * @param {String} recipient - The user id to whom we're sending the text message
-   * @param {String} title - The title of the account linking CTA
-   * @param {String} imageUrl - The URL of the image in the account linking CTA
-   * @param {String} serverUrl - The Authentication callback URL
-   * @param {Function} cb - The callback function
+   * @param {string} recipient - The user id to whom we're sending the text message
+   * @param {string} title - The title of the account linking CTA
+   * @param {string} imageUrl - The URL of the image in the account linking CTA
+   * @param {string} serverUrl - The Authentication callback URL
+   * @callback [cb] - The callback function
    */
   sendAccountLinking (recipient, title, imageUrl, serverUrl, cb) {
     var message = {
@@ -723,8 +736,8 @@ class Messenger {
    * This method will get the User Profile, used to query more information about
    * the user, and personalize the experience further.
    *
-   * @param {String} userId - The user id
-   * @param {Function} cb - The callback function
+   * @param {string} userId - The user id
+   * @callback [cb] - The callback function
    */
   getUserProfile (userId, cb) {
     // TODO: test selected fields
@@ -744,8 +757,8 @@ class Messenger {
  /**
  * This method will send a Request to the Send API.
  *
- * @param {Object} req - The request being send
- * @param {Function} cb - The callback function
+ * @param {object} req - The request being send
+ * @callback [cb] - The callback function
  */
 const sendRequest = (req, cb) => {
   request(req, (error, response, body) => {
