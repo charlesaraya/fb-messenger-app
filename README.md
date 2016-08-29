@@ -117,17 +117,17 @@ var messenger = new MessengerApp(token[, notificationType])
 ##### Functions
 
 ```js
-messenger.sendTextMessage(id, stringMessage[, notificationType][, cb])
+messenger.sendTextMessage(recipient, text[, notificationType][, cb])
 
 messenger.sendFileMessage(recipient, fileType, fileUrl[, notificationType][, cb])
 
-messenger.sendButtonMessage(recipient, buttonTemplate, buttons[, notificationType][, cb])
+messenger.sendButtonMessage(recipient, text, buttons[, notificationType][, cb])
 
 messenger.sendGenericMessage(recipient, elements[, notificationType][, cb])
 
 messenger.sendReceiptMessage(recipient, receipt[, notificationType][, cb])
 
-messenger.sendQuickMessage(recipient, quickReplies[, notificationType][, cb])
+messenger.sendQuickMessage(recipient, text, quickReplies[, notificationType][, cb])
 
 messenger.sendItineraryMessage(recipient, itinerary[, notificationType][, cb])
 
@@ -143,7 +143,7 @@ messenger.sendSenderAction(recipient, senderAction[, cb])
 
 messenger.getUserProfile(userId[, cb])
 
-messenger.setGreetingText(greeting[, cb])
+messenger.setGreetingText(payload[, cb])
 
 messenger.setGetStartedButton(message[, cb])
 
