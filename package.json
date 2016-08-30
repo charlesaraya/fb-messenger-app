@@ -1,6 +1,6 @@
 {
   "name": "fb-messenger-app",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "NodeJS API adapter for Messenger Platform",
   "main": "main/app.js",
   "scripts": {
