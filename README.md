@@ -143,9 +143,9 @@ messenger.sendSenderAction(recipient, senderAction[, cb])
 
 messenger.getUserProfile(userId[, cb])
 
-messenger.setGreetingText(payload[, cb])
+messenger.setGreetingText(text[, cb])
 
-messenger.setGetStartedButton(message[, cb])
+messenger.setGetStartedButton(payload[, cb])
 
 messenger.setPersistentMenu(menuItems[, cb])
 
@@ -159,7 +159,9 @@ messenger.getUserPsid(tokeb[, cb])
 
 messenger.unlinkAccount(psid[, cb])
 
-messenger.sendAccountLinking(recipient, title, imageUrl, serverUrl[, cb])
+messenger.sendAccountLinkingMessage(recipient, title, imageUrl, authUrl[, cb])
+
+messenger.sendAccountUnlinkingMessage(recipient, title, imageUrl[, cb])
 ```
 
 #### Notification Types

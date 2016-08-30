@@ -503,7 +503,7 @@ class Messenger {
    * @callback [cb] - The callback function
    */
   sendApiMessage (recipient, message, notificationType, cb) {
-    // TODO: test message object
+    // TODO: test message object and possible refactoring
     if (typeof notificationType === 'function') {
       cb = notificationType
       notificationType = this.notificationType
@@ -543,6 +543,7 @@ class Messenger {
    * @callback [cb] - The callback function
    */
   sendSenderAction (recipient, senderAction, cb) {
+    // TODO test senderAction
     /*
     if (!recipient.id && !recipient.phoneNumber) {
       throw new Error('Sender action error: recipient id or phone number must be set')
@@ -571,18 +572,18 @@ class Messenger {
    /**
    * This method will set a Greeting Text.
    *
-   * @param {string} greeting - The greeting text
+   * @param {(object|string)} text - The greeting text
    * @callback [cb] - The callback function
    */
-  setGreetingText (greeting, cb) {
-    // TODO: test greeting object
-    if (typeof greeting === 'string') {
-      greeting = {text: greeting}
+  setGreetingText (text, cb) {
+    // TODO test 
+    if (typeof text === 'string') {
+      text = {text: text}
     }
     var method = 'POST'
     var params = {
       setting_type: 'greeting',
-      greeting: greeting
+      greeting: text
     }
     this.sendThreadSettingsRequest(method, params, cb)
   }
@@ -590,11 +591,11 @@ class Messenger {
    /**
    * This method will set a Get Started Button, in the welcome screen.
    *
-   * @param {Array of payload} payload - The array of payload
+   * @param {(object[]|string)} payload - The string payloads
    * @callback [cb] - The callback function
    */
   setGetStartedButton (payload, cb) {
-    // TODO: test message (1+ payloads), button was succesfully set/succsefully removed?
+    // TODO: test payload, response
     if (typeof payload === 'string') {  // Case a string is entered
       payload = [{
         payload: payload
@@ -612,7 +613,7 @@ class Messenger {
    /**
    * This method will set a Persistent Menu, always available to the user.
    *
-   * @param {Array of menu_item objects} menuItems - The menu items
+   * @param {object[]} menuItems - The menu items in the menu
    * @callback [cb] - The callback function
    */
   setPersistentMenu (menuItems, cb) {
@@ -634,7 +635,7 @@ class Messenger {
    * @callback [cb] - The callback function
    */
   deleteThreadSetting (threadType, cb) {
-    // TODO: test threadType
+    // TODO: test threadType ('existing_thread' for persistentMenu and 'new_thread' for GetStartedButton)
     var method = 'DELETE'
     var params = {
       setting_type: 'call_to_actions',
@@ -651,6 +652,7 @@ class Messenger {
    * @callback [cb] - The callback function
    */
   sendThreadSettingsRequest (method, params, cb) {
+    // TODO test
     const req = {
       url: `${apiUrl}me/thread_settings`,
       qs: {
@@ -663,6 +665,36 @@ class Messenger {
   }
 
    /**
+   * This method will send an account linking call-2-action to the user.
+   *
+   * @param {string} recipient - The user id to whom we're sending the text message
+   * @param {string} title - The title of the account linking CTA
+   * @param {string} imageUrl - The URL of the image in the account linking CTA
+   * @param {string} authUrl - The Authentication callback URL
+   * @callback [cb] - The callback function
+   */
+  sendAccountLinkingMessage (recipient, title, imageUrl, authUrl, cb) {
+    // TODO test
+    var message = {
+      attachment: {
+        type: 'tempalte',
+        payload: {
+          template_type: 'generic',
+          elements: [{
+            title: title,
+            image_url: imageUrl,
+            buttons: [{
+              type: 'account_link',
+              url: authUrl
+            }]
+          }]
+        }
+      }
+    }
+    this.sendApiMessage(recipient, message, cb)
+  }
+
+   /**
    * This method will retrieve the user page-scoped ID (PSID) using the account
    * linking endpoint.
    *
@@ -670,6 +702,7 @@ class Messenger {
    * @callback [cb] - The callback function
    */
   getUserPsid (token, cb) {
+    // TODO test response
     const req = {
       url: `${apiUrl}me`,
       qs: {
@@ -684,12 +717,41 @@ class Messenger {
   }
 
    /**
+   * This method will send an account unlinking call-2-action to the user.
+   *
+   * @param {string} recipient - The user id to whom we're sending the text message
+   * @param {string} title - The title of the account linking CTA
+   * @param {string} imageUrl - The URL of the image in the account linking CTA
+   * @callback [cb] - The callback function
+   */
+  sendAccountUnlinkingMessage (recipient, title, imageUrl, cb) {
+    // TODO test
+    var message = {
+      attachment: {
+        type: 'tempalte',
+        payload: {
+          template_type: 'generic',
+          elements: [{
+            title: title,
+            image_url: imageUrl,
+            buttons: [{
+              type: 'account_unlink',
+            }]
+          }]
+        }
+      }
+    }
+    this.sendApiMessage(recipient, message, cb)
+  }
+
+   /**
    * This method will unlink the user account.
    *
    * @param {string} psid - A valid page-scoped ID (PSID)
    * @callback [cb] - The callback function
    */
   unlinkAccount (psid, cb) {
+    // TODO test response
     const req = {
       url: `${apiUrl}me/unlink_accounts`,
       qs: {
@@ -701,35 +763,6 @@ class Messenger {
       }
     }
     sendRequest(req, cb)
-  }
-
-   /**
-   * This method will send an account linking call-2-action to the user.
-   *
-   * @param {string} recipient - The user id to whom we're sending the text message
-   * @param {string} title - The title of the account linking CTA
-   * @param {string} imageUrl - The URL of the image in the account linking CTA
-   * @param {string} serverUrl - The Authentication callback URL
-   * @callback [cb] - The callback function
-   */
-  sendAccountLinking (recipient, title, imageUrl, serverUrl, cb) {
-    var message = {
-      attachment: {
-        type: 'tempalte',
-        payload: {
-          template_type: 'generic',
-          elements: [{
-            title: title,
-            image_url: imageUrl,
-            buttons: [{
-              type: 'account_link',
-              url: `${serverUrl}/authorize`
-            }]
-          }]
-        }
-      }
-    }
-    this.sendApiMessage(recipient, message, cb)
   }
 
    /**
