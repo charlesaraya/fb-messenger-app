@@ -43,9 +43,7 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendTextMessage (recipient, text, notificationType, cb) {
-    var message = {
-      text: text
-    }
+    const message = { text: text }
     this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
@@ -60,7 +58,7 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendFileMessage (recipient, fileType, fileUrl, notificationType, cb) {
-    var message = {
+    const message = {
       attachment: {
         type: fileType,
         payload: {
@@ -82,7 +80,7 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendButtonMessage (recipient, text, buttons, notificationType, cb) {
-    var message = {
+    const message = {
       attachment: {
         type: 'template',
         payload: {
@@ -106,7 +104,7 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendGenericMessage (recipient, elements, notificationType, cb) {
-    var message = {
+    const message = {
       attachment: {
         type: 'template',
         payload: {
@@ -124,36 +122,14 @@ class Messenger {
   *
   * @param {string} recipient - The receipient user id.
   * @param {object} receipt - The Receipt Template
-  * @param {string} receipt.recipient_name - The recipient's name.
-  * @param {string} receipt.order_number - The order number (must be unique).
-  * @param {string} receipt.currency - The currency for order.
-  * @param {string} receipt.payment_method - The payment method details. Can be a custom string. ex: "Visa 1234"..
-  * @param {string} [receipt.order_url] - The URL of the order.
-  * @param {string} [receipt.timestamp] - The timestamp of the order, in seconds.
-  * @param {object[]} receipt.elements - The items in order.
-  * @param {object} [receipt.address] - The shipping address.
-  * @param {object} receipt.summary - The payment summary.
-  * @param {object[]} [receipt.adjustments] - The payment adjustments.
   * @param {string} [notificationType] - The notification type
   * @callback [cb] - The callback function
   */
   sendReceiptMessage (recipient, receipt, notificationType, cb) {
-    var message = {
+    const message = {
       attachment: {
         type: 'template',
-        payload: {
-          template_type: 'receipt',
-          recipient_name: receipt.recipient_name,
-          order_number: receipt.order_number,
-          currency: receipt.currency,
-          payment_method: receipt.payment_method,
-          order_url: receipt.order_url,
-          timestamp: receipt.timestamp,
-          elements: receipt.shopping_cart,
-          address: receipt.address,
-          summary: receipt.summary,
-          adjustments: receipt.adjustments
-        }
+        payload: receipt
       }
     }
     this.sendApiMessage(recipient, message, notificationType, cb)
@@ -169,7 +145,7 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendQuickMessage (recipient, text, quickReplies, notificationType, cb) {
-    var message = {
+    const message = {
       text: text,
       quick_replies: quickReplies
     }
@@ -185,24 +161,10 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendItineraryMessage (recipient, itinerary, notificationType, cb) {
-    var message = {
+    const message = {
       attachment: {
         type: 'template',
-        payload: {
-          template_type: 'airline_itinerary',
-          intro_message: itinerary.intro_message,
-          locale: itinerary.locale,
-          theme_color: itinerary.theme_color,  // not required, RGB hexadecimal string (default #009ddc)
-          pnr_number: itinerary.pnr_number,
-          passenger_info: itinerary.passenger_info,  // array of passenger_info
-          flight_info: itinerary.flight_info,  // array of flight_info
-          passenger_segment_info: itinerary.passenger_segment_info,  // array of passenger_segment_info
-          price_info: itinerary.price_info,  // array of price_info, not required, limited to 4
-          base_price: itinerary.base_price,  // not required
-          tax: itinerary.tax,  // not required
-          total_price: itinerary.total_price,
-          currency: itinerary.currency  // must be a three digit ISO-4217-3 code
-        }
+        payload: itinerary
       }
     }
     this.sendApiMessage(recipient, message, notificationType, cb)
@@ -217,18 +179,10 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendCheckinMessage (recipient, checkin, notificationType, cb) {
-    var message = {
+    const message = {
       attachment: {
         type: 'template',
-        payload: {
-          template_type: 'airline_checkin',
-          intro_message: checkin.intro_message,
-          locale: checkin.locale,
-          theme_color: checkin.theme_color,  // not required
-          pnr_number: checkin.pnr_number,
-          flight_info: checkin.flight_info,  // array of flight info
-          checkin_url: checkin.checkin_url
-        }
+        payload: checkin
       }
     }
     this.sendApiMessage(recipient, message, notificationType, cb)
@@ -244,16 +198,10 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendBoardingpassMessage (recipient, boardingpass, notificationType, cb) {
-    var message = {
+    const message = {
       attachment: {
         type: 'template',
-        payload: {
-          template_type: 'airline_boardingpass',
-          intro_message: boardingpass.intro_message,
-          locale: boardingpass.locale,
-          theme_color: boardingpass.theme_color,  // not required
-          boarding_pass: boardingpass.boarding_pass  // array of boarding_pass
-        }
+        payload: boardingpass
       }
     }
     this.sendApiMessage(recipient, message, notificationType, cb)
@@ -268,37 +216,10 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendFlightupdateMessage (recipient, flightupdate, notificationType, cb) {
-    var message = {
+    const message = {
       attachment: {
         type: 'template',
-        payload: {
-          template_type: 'airline_update',
-          intro_message: flightupdate.intro_message,
-          update_type: flightupdate.update_type,
-          locale: flightupdate.locale,
-          theme_color: flightupdate.theme_color,  // not required
-          pnr_number: flightupdate.pnr_number,
-          update_flight_info: {
-            flight_number: flightupdate.update_flight_info.flight_number,
-            departure_airport: {
-              airport_code: flightupdate.update_flight_info.departure_airport.airport_code,
-              city: flightupdate.update_flight_info.departure_airport.city,
-              terminal: flightupdate.update_flight_info.departure_airport.terminal,
-              gate: flightupdate.update_flight_info.departure_airport.gate
-            },
-            arrival_airport: {
-              airport_code: flightupdate.update_flight_info.arrival_airport.airport_code,
-              city: flightupdate.update_flight_info.arrival_airport.city,
-              terminal: flightupdate.update_flight_info.arrival_airport.terminal,
-              gate: flightupdate.update_flight_info.arrival_airport.gate
-            },
-            flight_schedule: {  // must be ISO 8601-based format
-              boarding_time: flightupdate.update_flight_info.flight_schedule.boarding_time,  // not required
-              departure_time: flightupdate.update_flight_info.flight_schedule.departure_time,
-              arrival_time: flightupdate.update_flight_info.flight_schedule.arrival_time  // not required
-            }
-          }
-        }
+        payload: flightupdate
       }
     }
     this.sendApiMessage(recipient, message, notificationType, cb)
@@ -369,8 +290,8 @@ class Messenger {
     if (typeof text === 'string') {
       text = {text: text}
     }
-    var method = 'POST'
-    var params = {
+    const method = 'POST'
+    const params = {
       setting_type: 'greeting',
       greeting: text
     }
@@ -389,8 +310,8 @@ class Messenger {
         payload: payload
       }]
     }
-    var method = 'POST'
-    var params = {
+    const method = 'POST'
+    const params = {
       setting_type: 'call_to_actions',
       thread_state: 'new_thread',
       call_to_actions: payload // max 1
@@ -405,8 +326,8 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   setPersistentMenu (menuItems, cb) {
-    var method = 'POST'
-    var params = {
+    const method = 'POST'
+    const params = {
       setting_type: 'call_to_actions',
       thread_state: 'existing_thread',
       call_to_actions: menuItems
@@ -422,8 +343,8 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   deleteThreadSetting (threadType, cb) {
-    var method = 'DELETE'
-    var params = {
+    const method = 'DELETE'
+    const params = {
       setting_type: 'call_to_actions',
       thread_state: threadType
     }
@@ -459,7 +380,7 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendAccountLinkingMessage (recipient, title, imageUrl, authUrl, cb) {
-    var message = {
+    const message = {
       attachment: {
         type: 'tempalte',
         payload: {
@@ -508,7 +429,7 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendAccountUnlinkingMessage (recipient, title, imageUrl, cb) {
-    var message = {
+    const message = {
       attachment: {
         type: 'tempalte',
         payload: {
