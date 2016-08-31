@@ -93,16 +93,11 @@ class Messenger {
   * @param {string} [notificationType] - The notification type
   * @callback [cb] - The callback function
   */
-  sendFileMessage (recipient, fileType, fileUrl, notificationType, cb) {
-    const message = {
-      attachment: {
-        type: fileType,
-        payload: {
-          url: fileUrl
-        }
-      }
+  sendFileMessage (recipient, type, fileUrl, notificationType, cb) {
+    const payload = {
+      url: fileUrl
     }
-    this.sendApiMessage(recipient, message, notificationType, cb)
+    this.sendAttachmentMessage(recipient, type, payload, notificationType, cb)
   }
 
   /**
