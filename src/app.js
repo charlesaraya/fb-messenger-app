@@ -64,7 +64,7 @@ class Messenger {
   * This method will send an Attachment Message.
   *
   * @param {string} recipient - The user id that will receive the message
-  * @param {string} type - The attachment type [image, audio, video, file, location, template]
+  * @param {string} type - The attachment type [image, audio, video, file, template]
   * @param {object} payload - The attachment payload
   * @param {string} [notificationType] - The notification type
   * @callback [cb] - The callback function
