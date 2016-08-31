@@ -43,7 +43,7 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendTextMessage (recipient, text, notificationType, cb) {
-    this.sendApiMessage(recipient, { text: message }, notificationType, cb)
+    this.sendApiMessage(recipient, { text: text }, notificationType, cb)
   }
 
   /**
