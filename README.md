@@ -96,7 +96,7 @@ Depending on your app's flow, generally you'll bring the users attention, or jus
 
 ```js
 messenger.sendTextMessage(USER_ID, 'Hey! Check this out!', 'REGULAR')
-messenger.sendTextMessage(USER_ID, 'Check this out, there's no hurry...', 'SILENT_PUSH')
+messenger.sendTextMessage(USER_ID, "Check this out, there's no hurry...", 'SILENT_PUSH')
 messenger.sendTextMessage(USER_ID, 'If you see this message, check this out', 'NO_PUSH')
 ```
 
