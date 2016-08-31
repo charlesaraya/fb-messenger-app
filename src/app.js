@@ -43,9 +43,7 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendTextMessage (recipient, text, notificationType, cb) {
-    const message = {
-      text: message
-    }
+    const message = { text: message }
     this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
@@ -58,9 +56,7 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendQuickMessage (recipient, quickReplies, notificationType, cb) {
-    const message = {
-      quick_replies: quickReplies
-    }
+    const message = { quick_replies: quickReplies }
     this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
@@ -94,9 +90,7 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendFileMessage (recipient, type, fileUrl, notificationType, cb) {
-    const payload = {
-      url: fileUrl
-    }
+    const payload = { url: fileUrl }
     this.sendAttachmentMessage(recipient, type, payload, notificationType, cb)
   }
 
