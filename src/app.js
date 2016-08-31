@@ -181,13 +181,8 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendBoardingpassMessage (recipient, boardingpass, notificationType, cb) {
-    const message = {
-      attachment: {
-        type: 'template',
-        payload: boardingpass
-      }
-    }
-    this.sendApiMessage(recipient, message, notificationType, cb)
+    const payload = boardingpass
+    this.sendAttachmentMessage(recipient, 'template', payload, notificationType, cb)
   }
 
   /**
