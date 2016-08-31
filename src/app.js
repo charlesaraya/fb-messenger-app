@@ -141,13 +141,8 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendReceiptMessage (recipient, receipt, notificationType, cb) {
-    const message = {
-      attachment: {
-        type: 'template',
-        payload: receipt
-      }
-    }
-    this.sendApiMessage(recipient, message, notificationType, cb)
+    const payload = receipt
+    this.sendAttachmentMessage(recipient, 'template', payload, notificationType, cb)
   }
 
   /**
