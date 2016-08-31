@@ -194,13 +194,8 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendFlightupdateMessage (recipient, flightupdate, notificationType, cb) {
-    const message = {
-      attachment: {
-        type: 'template',
-        payload: flightupdate
-      }
-    }
-    this.sendApiMessage(recipient, message, notificationType, cb)
+    const payload = flightupdate
+    this.sendAttachmentMessage(recipient, 'template', payload, notificationType, cb)
   }
 
   /**
