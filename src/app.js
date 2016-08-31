@@ -124,16 +124,11 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendGenericMessage (recipient, elements, notificationType, cb) {
-    const message = {
-      attachment: {
-        type: 'template',
-        payload: {
-          template_type: 'generic',
-          elements: elements
-        }
-      }
+    const payload = {
+      template_type: 'generic',
+      elements: elements
     }
-    this.sendApiMessage(recipient, message, notificationType, cb)
+    this.sendAttachmentMessage(recipient, 'template', payload, notificationType, cb)
   }
 
   /**
