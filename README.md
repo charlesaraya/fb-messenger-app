@@ -8,8 +8,10 @@
 
 ## Installation
 
+Install the `fb-messenger-app` package and its dependencies in your node server app's local `node_modules` folder.
+
 ```bash
-npm install fb-messenger-app
+npm install --Save fb-messenger-app
 ```
 
 ### How to start
