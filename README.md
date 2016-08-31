@@ -1,15 +1,17 @@
 # Facebook Messenger Platform App
 
-#### NodeJS API adapter
+#### Node API adapter in ECMAScript 2015 (ES6)
 
-[![npm](https://img.shields.io/npm/v/npm.svg)](https://www.npmjs.com/package/fb-messenger-app) [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/) [![npm](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
+[![npm](https://img.shields.io/npm/v/npm.svg)](https://www.npmjs.com/package/fb-messenger-app) [![npm](https://img.shields.io/npm/dm/fb-messenger-app.svg)](https://www.npmjs.com/package/fb-messenger-app) [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/) [![npm](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e49cfaf866174e5fa9053cc2e894927f)](https://www.codacy.com/app/charlesaraya/fb-messenger-app?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=charlesaraya/fb-messenger-app&amp;utm_campaign=Badge_Grade)
 
 ## Installation
 
+Install the `fb-messenger-app` package and its dependencies in your node server app's local `node_modules` folder.
+
 ```bash
-npm install fb-messenger-app
+npm install --Save fb-messenger-app
 ```
 
 ### How to start
@@ -94,7 +96,7 @@ Depending on your app's flow, generally you'll bring the users attention, or jus
 
 ```js
 messenger.sendTextMessage(USER_ID, 'Hey! Check this out!', 'REGULAR')
-messenger.sendTextMessage(USER_ID, 'Check this out, there's no hurry...', 'SILENT_PUSH')
+messenger.sendTextMessage(USER_ID, "Check this out, there's no hurry...", 'SILENT_PUSH')
 messenger.sendTextMessage(USER_ID, 'If you see this message, check this out', 'NO_PUSH')
 ```
 
