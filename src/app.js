@@ -105,17 +105,12 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendButtonMessage (recipient, text, buttons, notificationType, cb) {
-    const message = {
-      attachment: {
-        type: 'template',
-        payload: {
-          template_type: 'button',
-          text: text,
-          buttons: buttons
-        }
-      }
+    const payload = {
+      template_type: 'button',
+      text: text,
+      buttons: buttons
     }
-    this.sendApiMessage(recipient, message, notificationType, cb)
+    this.sendAttachmentMessage(recipient, 'template', payload, notificationType, cb)
   }
 
   /**
