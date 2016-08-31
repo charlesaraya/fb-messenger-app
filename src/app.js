@@ -43,7 +43,43 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendTextMessage (recipient, text, notificationType, cb) {
-    const message = { text: text }
+    const message = {
+      text: message
+    }
+    this.sendApiMessage(recipient, message, notificationType, cb)
+  }
+
+  /**
+  * This method will send a Quick Replies Message.
+  *
+  * @param {string} recipient - The user id to whom we're sending the text message
+  * @param {object[]} quickReplies - The quick replies to be sent with messages
+  * @param {string} [notificationType] - The notification type
+  * @callback [cb] - The callback function
+  */
+  sendQuickMessage (recipient, quickReplies, notificationType, cb) {
+    const message = {
+      quick_replies: quickReplies
+    }
+    this.sendApiMessage(recipient, message, notificationType, cb)
+  }
+
+  /**
+  * This method will send an Attachment Message.
+  *
+  * @param {string} recipient - The user id that will receive the message
+  * @param {string} type - The attachment type
+  * @param {object} payload - The attachment payload
+  * @param {string} [notificationType] - The notification type
+  * @callback [cb] - The callback function
+  */
+  sendAttachmentMessage (recipient, type, payload, notificationType, cb) {
+    const message = {
+      attachment: {
+        type: type, // image, audio, video, file, location, template
+        payload: payload
+      }
+    }
     this.sendApiMessage(recipient, message, notificationType, cb)
   }
 
@@ -131,23 +167,6 @@ class Messenger {
         type: 'template',
         payload: receipt
       }
-    }
-    this.sendApiMessage(recipient, message, notificationType, cb)
-  }
-
-  /**
-  * This method will send a Quick Replies Message.
-  *
-  * @param {string} recipient - The user id to whom we're sending the text message
-  * @param {string} text - The message text
-  * @param {object[]} quickReplies - The quick replies to be sent with messages
-  * @param {string} [notificationType] - The notification type
-  * @callback [cb] - The callback function
-  */
-  sendQuickMessage (recipient, text, quickReplies, notificationType, cb) {
-    const message = {
-      text: text,
-      quick_replies: quickReplies
     }
     this.sendApiMessage(recipient, message, notificationType, cb)
   }
