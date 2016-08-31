@@ -154,13 +154,8 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendItineraryMessage (recipient, itinerary, notificationType, cb) {
-    const message = {
-      attachment: {
-        type: 'template',
-        payload: itinerary
-      }
-    }
-    this.sendApiMessage(recipient, message, notificationType, cb)
+    const payload = itinerary
+    this.sendAttachmentMessage(recipient, 'template', payload, notificationType, cb)
   }
 
   /**
