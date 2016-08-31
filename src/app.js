@@ -167,13 +167,8 @@ class Messenger {
   * @callback [cb] - The callback function
   */
   sendCheckinMessage (recipient, checkin, notificationType, cb) {
-    const message = {
-      attachment: {
-        type: 'template',
-        payload: checkin
-      }
-    }
-    this.sendApiMessage(recipient, message, notificationType, cb)
+    const payload = checkin
+    this.sendAttachmentMessage(recipient, 'template', payload, notificationType, cb)
   }
 
   /**
