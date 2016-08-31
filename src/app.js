@@ -88,7 +88,7 @@ class Messenger {
   * Image supported formats [jpg, png and gifs]
   *
   * @param {string} recipient - The user id to whom we're sending the text message
-  * @param {string} fileType - The file type (required) ['image', 'audio', 'video' or 'file']
+  * @param {string} type - The file type ['image', 'audio', 'video' or 'file']
   * @param {string} fileUrl - The file url where it is hosted (required)
   * @param {string} [notificationType] - The notification type
   * @callback [cb] - The callback function
