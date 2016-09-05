@@ -121,6 +121,10 @@ var messenger = new MessengerApp(token[, notificationType])
 ```js
 messenger.sendTextMessage(recipient, text[, notificationType][, cb])
 
+messenger.sendQuickMessage(recipient, quickReplies[, notificationType][, cb])
+
+messenger.sendAttachmentMessage(recipient, type, payload[, notificationType][, cb])
+
 messenger.sendFileMessage(recipient, fileType, fileUrl[, notificationType][, cb])
 
 messenger.sendButtonMessage(recipient, text, buttons[, notificationType][, cb])
@@ -128,8 +132,6 @@ messenger.sendButtonMessage(recipient, text, buttons[, notificationType][, cb])
 messenger.sendGenericMessage(recipient, elements[, notificationType][, cb])
 
 messenger.sendReceiptMessage(recipient, receipt[, notificationType][, cb])
-
-messenger.sendQuickMessage(recipient, text, quickReplies[, notificationType][, cb])
 
 messenger.sendItineraryMessage(recipient, itinerary[, notificationType][, cb])
 
