@@ -4,9 +4,9 @@
   "description": "NodeJS API adapter for Messenger Platform",
   "main": "main/app.js",
   "scripts": {
-    "build": "babel src -d main",
-    "standard": "standard src/app.js",
+    "standard": "standard lib/app.js",
     "test": "mocha test/app.test.js",
+    "build": "babel lib -d main",
     "start": "npm run build"
   },
   "devDependencies": {
@@ -39,6 +39,11 @@
     "url": "https://github.com/charlesaraya/fb-messenger-app/issues"
   },
   "homepage": "https://github.com/charlesaraya/fb-messenger-app#readme",
+  "files": [
+    "LICENSE",
+    "README.md",
+    "lib/"
+  ],
   "babel": {
     "presets": [
       "es2015"
