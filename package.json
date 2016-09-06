@@ -35,6 +35,11 @@
     "url": "https://github.com/charlesaraya/fb-messenger-app/issues"
   },
   "homepage": "https://github.com/charlesaraya/fb-messenger-app#readme",
+  "files": [
+    "LICENSE",
+    "README.md",
+    "lib/"
+  ],
   "babel": {
     "presets": [
       "es2015"
