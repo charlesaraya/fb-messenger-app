@@ -5,13 +5,17 @@
   "main": "main/app.js",
   "scripts": {
     "build": "babel src -d main",
-    "test": "standard src/app.js",
+    "standard": "standard src/app.js",
+    "test": "mocha test/app.test.js",
     "start": "npm run build"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",
     "babel-plugin-transform-export-extensions": "^6.8.0",
     "babel-preset-es2015": "^6.13.2",
+    "chai": "^3.5.0",
+    "mocha": "^3.0.2",
+    "sinon": "^1.17.5",
     "standard": "^8.0.0"
   },
   "keywords": [
