@@ -145,7 +145,7 @@ messenger.sendSenderActions(USER_ID, 'typing_on')
 var messenger = new MessengerApp(token [, notificationType])
 ```
 
-##### Functions
+##### Methods
 
 ```js
 messenger.sendApiMessage(recipient, message [, notificationType] [, cb])
