@@ -8,7 +8,7 @@
 
 ## Installation
 
-Install the `fb-messenger-app` package and its dependencies in your node server app's local `node_modules` folder.
+Install the `fb-messenger-app` package in your node server app's local `node_modules` folder.
 
 ```bash
 npm install --Save fb-messenger-app
@@ -18,12 +18,12 @@ npm install --Save fb-messenger-app
 
 I take for granted that you've already [setup your Messenger Platform app](https://developers.facebook.com/docs/messenger-platform/quickstart):
 
-1. Create a Facebook App and Page
-2. Setup Webhook
-3. Get a Page Access Token
-4. Subscribe the App to the Page
+1. Created a Facebook App and Page
+2. Setup the Webhook
+3. Got a Page Access Token
+4. Subscribed the App to the Page
 
-After installing the fb-messenger-app package with npm as shown above, you'll have to requiere it in your app
+After installing the fb-messenger-app package with npm as shown above, import it in your app
 
 ```js
 const MessengerApp = require('fb-messenger-app')
@@ -37,54 +37,63 @@ var messenger = new MessengerApp(MY_PAGE_ACCESS_TOKEN)
 
 ### Receive Messages
 
-You'll have to listen for _POST_ calls at your webhook. [Callbacks](https://developers.facebook.com/docs/messenger-platform/webhook-reference#format) will be made to this webhook. As the Messenger Platform [guide](https://developers.facebook.com/docs/messenger-platform/quickstart#steps) shows, you'll have to iterate over each page subscription and every messaging event
+You'll have to listen for _POST_ calls at your webhook. [Callbacks](https://developers.facebook.com/docs/messenger-platform/webhook-reference#format) will be made to this webhook. For this purpose, _handleCallback will listen and dispatch each callback type by emitting its corresponding event.
 
 ```js
-if (data.object === 'page') {
-  data.entry.forEach(function(pageEntry) {
-    pageEntry.messaging.forEach(function(messagingEvent) {
-      if (messagingEvent.optin) {
-        messenger.receivedAuthentication(messagingEvent);
-      } else if (messagingEvent.message) {
-        messenger.receivedMessage(messagingEvent);
-      } else if (messagingEvent.delivery) {
-        messenger.receivedDeliveryConfirmation(messagingEvent);
-      } else if (messagingEvent.postback) {
-        messenger.receivedPostback(messagingEvent);
-      } else if (event.account_linking) {
-        messenger.receivedAccountLinking(event)
-      } else {
-        console.log('Webhook received unknown messagingEvent: ', messagingEvent);
-      }
-    })
-  })
-}
-```
-
-There's a build-in dispatcher that handles all messaging events
-
-```js 
 app.post('/webhook', function (req, res) {
   var data = req.body
-  messenger.messageDispatcher(res, data)
+  messenger._handleCallback(res, data)
 })
 ```
 
 ### Send Messages to the user
 
-All send Message methods call to ```sendApiMessage```. It'll make POST calls to facebook's Graph API with your app's page access token, and a JSON payload with the 'recipient's id' and the message object to be send (text, image, audio, structured message, receipt, quick replies, airline itinerary, etc.).
+All messages must be send through the ```sendApiMessage``` method. It'll make POST calls to facebook's Graph API with your app's page access token, and a JSON payload with the 'recipient's id' and the message object to be send. For more information about the payload supported by facebook go ahead an [read more here](https://developers.facebook.com/docs/messenger-platform/send-api-reference).
 
 ```js
-messenger.sendTextMessage(USER_ID, 'Howdy!')
-messenger.sendFileMessage(USER_ID, 'image', 'http://giphy.com/gifs/80s-go-bots-go-bots-wiNiBviTrV6ww')
-messenger.sendGenericMessage(USER_ID, genericData)
-messenger.sendCheckinMessage(USER_ID, userCheckin)
+messenger.sendApiMessage(USER_ID, {text: 'Howdy!'})
+
+var myImage = {
+  attachment:
+    { 
+      type: 'image',
+      payload: { 
+        url: 'https://petersapparel.com/img/shirt.png'
+      }
+    }
+  }
+
+messenger.sendApiMessage(USER_ID, myImage)
 ```
 
 ### Using callbacks
 
+A successful send API request returns a JSON with the identifier of the user and the message.
+
+```json
+{
+  "recipient_id": "1008372609250235",
+  "message_id": "mid.1456970487936:c34767dfe57ee6e339"
+}
+```
+
+On the other hand, a when the send API request fails, a JSON is returned with the corresponding error code and message. Messenger Platform errors are grouped by code, with a different message depending on the error condition. [Read more here](https://developers.facebook.com/docs/messenger-platform/send-api-reference#errors)
+
+```json
+{
+  "error": {
+    "message": "Invalid OAuth access token.",
+    "type": "OAuthException",
+    "code": 190,
+    "fbtrace_id": "BLBz/WZt8dN"
+  }
+}
+```
+
+Finally, an example would be the following.
+
 ```js
-messenger.sendGenericMessage(USER_ID, myBrandProducts, function (err, body) {
+messenger.sendApiMessage(USER_ID, myBrandProducts, function (err, body) {
   if (err) return console.log('Something went wrong: could not send my brand products')
   console.log('Generic message with my brand products where send to %d', USER_ID)
 })
@@ -92,7 +101,15 @@ messenger.sendGenericMessage(USER_ID, myBrandProducts, function (err, body) {
 
 ### Notifications types
 
-Depending on your app's flow, generally you'll bring the users attention, or just let them know without disturbing them, but sometimes it will be the case that you won't have to disturb them at all.
+Optionally, depending on the case, sometimes you'll want to bring the user attention with a normal push. Other times, a silent notification would be enough, and, why not, it would be appropiate not to bother the user at all. We can achieve this by adding the notificationType parameter.
+
+#### Notification Types
+
+If missing, a regular push notification will be sent.
+
+- __REGULAR__ : will emit a sound/vibration and a phone notification
+- __SILENT_PUSH__ : will just emit a phone notification
+- __NO_PUSH__ : will not emit either
 
 ```js
 messenger.sendTextMessage(USER_ID, 'Hey! Check this out!', 'REGULAR')
@@ -100,12 +117,24 @@ messenger.sendTextMessage(USER_ID, "Check this out, there's no hurry...", 'SILEN
 messenger.sendTextMessage(USER_ID, 'If you see this message, check this out', 'NO_PUSH')
 ```
 
-#### Changing the default notifications type
+#### Configure the notification type default
 
-You can change the app's notification type default. If ```undefined```, It will be set to 'REGULAR' by default.
+Set the bot's notification type default when instantiating it.
 
 ```js
-var messenger = new MessengerApp(MY_PAGE_ACCESS_TOKEN, MY_NOTIFICATION_TYPE)
+var messenger = new MessengerApp(MY_PAGE_ACCESS_TOKEN, 'SILENT_PUSH')
+```
+
+#### Sender Actions
+
+Set typing indicators or send read receipts.
+
+- __mark_seen__ : Mark last message as read
+- __typing_on__ : Turn typing indicators on
+- __typing_off__ : Turn typing indicators off
+
+```js
+messenger.sendSenderActions(USER_ID, 'typing_on')
 ```
 
 ## API
@@ -113,74 +142,40 @@ var messenger = new MessengerApp(MY_PAGE_ACCESS_TOKEN, MY_NOTIFICATION_TYPE)
 ##### Constructor
 
 ```js
-var messenger = new MessengerApp(token[, notificationType])
+var messenger = new MessengerApp(token [, notificationType])
 ```
 
 ##### Functions
 
 ```js
-messenger.sendTextMessage(recipient, text[, notificationType][, cb])
+messenger.sendApiMessage(recipient, message [, notificationType] [, cb])
 
-messenger.sendQuickMessage(recipient, quickReplies[, notificationType][, cb])
+messenger.sendSenderAction(recipient, senderAction [, cb])
 
-messenger.sendAttachmentMessage(recipient, type, payload[, notificationType][, cb])
-
-messenger.sendFileMessage(recipient, fileType, fileUrl[, notificationType][, cb])
-
-messenger.sendButtonMessage(recipient, text, buttons[, notificationType][, cb])
-
-messenger.sendGenericMessage(recipient, elements[, notificationType][, cb])
-
-messenger.sendReceiptMessage(recipient, receipt[, notificationType][, cb])
-
-messenger.sendItineraryMessage(recipient, itinerary[, notificationType][, cb])
-
-messenger.sendCheckinMessage(recipient, checkin[, notificationType][, cb])
-
-messenger.sendBoardingpassMessage(recipient, boardingpass[, notificationType][, cb])
-
-messenger.sendFlightupdateMessage(recipient, flightupdate[, notificationType][, cb])
-
-messenger.sendApiMessage(recipient, message[, notificationType][, cb])
-
-messenger.sendSenderAction(recipient, senderAction[, cb])
-
-messenger.getUserProfile(userId[, cb])
-
-messenger.setGreetingText(text[, cb])
-
-messenger.setGetStartedButton(payload[, cb])
-
-messenger.setPersistentMenu(menuItems[, cb])
-
-messenger.sendThreadSettingsRequest(method, params[, cb])
-
-messenger.deleteThreadSetting(threadType[, cb])
+messenger.getUserProfile(userId [, cb])
 
 messenger.subscribeApp([cb])
 
-messenger.getUserPsid(tokeb[, cb])
+messenger.getUserPsid(tokeb [, cb])
 
-messenger.unlinkAccount(psid[, cb])
+messenger.unlinkAccount(psid [, cb])
 
-messenger.sendAccountLinkingMessage(recipient, title, imageUrl, authUrl[, cb])
+messenger.threadSetting.setGreetingText(text [, cb])
 
-messenger.sendAccountUnlinkingMessage(recipient, title, imageUrl[, cb])
+messenger.threadSetting.setGetStartedButton(payload [, cb])
+
+messenger.threadSetting.setPersistentMenu(menuItems [, cb])
+
+messenger.threadSetting.deleteGetStartedButton(threadType [, cb])
+
+messenger.threadSetting.deletePersistentMenu(threadType [, cb])
+
+messenger.threadSetting.sendSettingRequest(method, params [, cb])
+
+messenger._handleCallback(res, data)
+
+messenger._handleEvent(type, event)
 ```
-
-#### Notification Types
-
-Notification Types are optional; by default, messages will be _REGULAR_ push notification type.
-- __REGULAR__ : will emit a sound/vibration and a phone notification
-- __SILENT_PUSH__ : will just emit a phone notification
-- __NO_PUSH__ : will not emit either
-
-#### Sender Actions
-
-Set typing indicators or send read receipts.
-- __mark_seen__ : Mark last message as read
-- __typing_on__ : Turn typing indicators on
-- __typing_off__ : Turn typing indicators off
 
 ## License
 
