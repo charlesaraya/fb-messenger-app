@@ -166,9 +166,9 @@ messenger.threadSetting.setGetStartedButton(payload [, cb])
 
 messenger.threadSetting.setPersistentMenu(menuItems [, cb])
 
-messenger.threadSetting.deleteGetStartedButton(threadType [, cb])
+messenger.threadSetting.deleteGetStartedButton([cb])
 
-messenger.threadSetting.deletePersistentMenu(threadType [, cb])
+messenger.threadSetting.deletePersistentMenu([cb])
 
 messenger.threadSetting.sendSettingRequest(method, params [, cb])
 
