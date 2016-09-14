@@ -145,7 +145,7 @@ messenger.sendSenderActions(USER_ID, 'typing_on')
 var messenger = new MessengerApp(token [, options])
 ```
 
-The following table describes the properties of the options object.
+The following table describes the properties of the 'options' object.
 
 | Property           | Description                                        | Type   | Default  |
 | ------------------ |:--------------------------------------------------:|:------:| --------:|
