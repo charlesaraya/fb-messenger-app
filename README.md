@@ -150,7 +150,7 @@ The following table describes the properties of the options object.
 | Property           | Description                                        | Type   | Default  |
 | ------------------ |:--------------------------------------------------:|:------:| --------:|
 | notificationType   | Determines how messages will be pushed to the user | String | 'REGULAR'    |
-| apiUrl             | Facebook's Graph API                               | String | 'https://graph.facebook.com/v2.6/'   |
+| apiUrl             | Facebook's Graph API                               | String | 'https&#58;//graph.facebook.com/v2.6/'   |
 
 ##### Methods
 
