@@ -37,7 +37,7 @@ var messenger = new MessengerApp(MY_PAGE_ACCESS_TOKEN)
 
 ### Receive Messages
 
-You'll have to listen for _POST_ calls at your webhook. [Callbacks](https://developers.facebook.com/docs/messenger-platform/webhook-reference#format) will be made to this webhook. For this purpose, _handleCallback will listen and dispatch each callback type by emitting its corresponding event.
+You'll have to listen for _POST_ calls at your webhook. [Callbacks](https://developers.facebook.com/docs/messenger-platform/webhook-reference#format) will be made to this webhook. For this purpose, `_handleCallback` will listen and dispatch each callback type by emitting its corresponding event.
 
 ```js
 app.post('/webhook', function (req, res) {
@@ -99,11 +99,11 @@ messenger.sendApiMessage(USER_ID, myBrandProducts, function (err, body) {
 })
 ```
 
-### Notifications types
+### Notifications
 
 Optionally, depending on the case, sometimes you'll want to bring the user attention with a normal push. Other times, a silent notification would be enough, and, why not, it would be appropiate not to bother the user at all. We can achieve this by adding the notificationType parameter.
 
-#### Notification Types
+#### Types
 
 If missing, a regular push notification will be sent.
 
@@ -119,7 +119,7 @@ messenger.sendTextMessage(USER_ID, 'If you see this message, check this out', 'N
 
 #### Configure the notification type default
 
-Set the bot's notification type default when instantiating it.
+Set the bot's default notification type when instantiating it.
 
 ```js
 var messenger = new MessengerApp(MY_PAGE_ACCESS_TOKEN, 'SILENT_PUSH')
@@ -142,8 +142,15 @@ messenger.sendSenderActions(USER_ID, 'typing_on')
 ##### Constructor
 
 ```js
-var messenger = new MessengerApp(token [, notificationType])
+var messenger = new MessengerApp(token [, options])
 ```
+
+The following table describes the properties of the options object.
+
+| Property           | Description                                        | Type   | Default  |
+| ------------------ |:--------------------------------------------------:|:------:| --------:|
+| notificationType   | Determines how messages will be pushed to the user | String | 'REGULAR'    |
+| apiUrl             | Facebook's Graph API                               | String | 'https://graph.facebook.com/v2.6/'   |
 
 ##### Methods
 
