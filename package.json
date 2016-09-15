@@ -6,8 +6,7 @@
   "scripts": {
     "standard": "standard lib/app.js",
     "test": "mocha test/app.test.js",
-    "build": "babel lib -d bin",
-    "start": "npm run build"
+    "build": "babel lib -d bin"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",
@@ -42,7 +41,7 @@
   "files": [
     "LICENSE",
     "README.md",
-    "lib/"
+    "bin/"
   ],
   "babel": {
     "presets": [
