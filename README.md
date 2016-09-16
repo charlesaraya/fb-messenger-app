@@ -182,6 +182,10 @@ messenger.threadSetting.sendSettingRequest(method, params [, cb])
 messenger._handleCallback(res, data)
 
 messenger._handleEvent(type, event)
+
+messenger.verify.webhook(verifyToken, req, res)
+
+messenger.verify.signature(appSecret, req, res, buf)
 ```
 
 ## License
