@@ -125,7 +125,7 @@ Set the bot's default notification type when instantiating it.
 var messenger = new MessengerApp(MY_PAGE_ACCESS_TOKEN, 'SILENT_PUSH')
 ```
 
-#### Sender Actions
+### Sender Actions
 
 Set typing indicators or send read receipts.
 
