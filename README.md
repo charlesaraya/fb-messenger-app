@@ -137,6 +137,19 @@ Set typing indicators or send read receipts.
 messenger.sendSenderActions(USER_ID, 'typing_on')
 ```
 
+### Verification
+
+There are to moment where you'll want to verify that things are fine.
+
+1. validate your webhook to make sure you're subscribed to any change
+2. validate the requests signature to make sure they come from facebook
+
+```js
+app.post('/webhook', function (req, res) {
+  messenger.verify.webhook(req, res)
+})
+```
+
 ## API
 
 ##### Constructor
