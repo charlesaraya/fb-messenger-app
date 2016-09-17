@@ -141,7 +141,7 @@ messenger.sendSenderActions(USER_ID, 'typing_on')
 
 There are to moment where you'll want to verify that things are fine.
 
-1. validate your webhook to make sure you're subscribed to any change
+##### validate your webhook to make sure you're subscribed to any change
 
 ```js
 app.post('/webhook', function (req, res) {
@@ -149,7 +149,7 @@ app.post('/webhook', function (req, res) {
 })
 ```
 
-2. validate the requests signature to make sure they come from facebook (express.js)
+##### validate the requests signature to make sure they come from facebook (express.js)
 
 ```js
 const app = express()
