@@ -139,7 +139,7 @@ messenger.sendSenderActions(USER_ID, 'typing_on')
 
 ### Verification
 
-There are to moment where you'll want to verify that things are fine.
+There are two moments where you'll want to verify that things are fine.
 
 ##### validate your webhook to make sure you're subscribed to any change
 
