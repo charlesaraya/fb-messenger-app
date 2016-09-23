@@ -134,7 +134,21 @@ Set typing indicators or send read receipts.
 - __typing_off__ : Turn typing indicators off
 
 ```js
-messenger.sendSenderActions(USER_ID, 'typing_on')
+messenger.senderAction.sendSenderActionRequest(USER_ID, 'typing_on')
+```
+
+You can send specific actions during given time intervals.
+
+##### Make the bot type for a given period of time
+
+```js
+messenger.senderAction.sendTypingInterval(USER_ID, 2000)
+```
+
+##### Mark the last message as read when after a given timeout
+
+```js
+messenger.senderAction.sendMarkSeenInterval(USER_ID, 1000)
 ```
 
 ### Verification
@@ -199,6 +213,12 @@ messenger.threadSetting.deleteGetStartedButton([cb])
 messenger.threadSetting.deletePersistentMenu([cb])
 
 messenger.threadSetting.sendSettingRequest(method, params [, cb])
+
+messenger.senderAction.sendSenderActionRequest(recipient, senderAction [, cb])
+
+messenger.senderAction.sendTypingInterval(recipient, time [, cb])
+
+messenger.senderAction.sendMarkSeenInterval(recipient, time [, cb])
 
 messenger._handleCallback(res, data)
 
