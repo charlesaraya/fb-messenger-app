@@ -5,7 +5,7 @@
   "main": "bin/app.js",
   "scripts": {
     "standard": "standard lib/app.js",
-    "test": "mocha test/app.test.js",
+    "test": "mocha test/*.js",
     "build": "babel lib -d bin"
   },
   "devDependencies": {
