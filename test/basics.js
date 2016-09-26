@@ -1,15 +1,13 @@
 'use strict'
 
 const mocha = require('mocha')
-const should = require('chai').should()
 const expect = require('chai').expect
 const Messenger = require('../bin/app').default
 
 describe('Bot', function () {
-  let dummyToken = 'foo' 
+  let dummyToken = 'foo'
 
   describe('#initialization', function () {
-
     describe('#basics', function () {
       let bot = new Messenger(dummyToken)
       let goodBot = function () { return bot }
@@ -19,7 +17,7 @@ describe('Bot', function () {
         expect(goodBot).to.not.throw(Error)
       })
       it('should initialize correctly', function () {
-        expect(bot).to.exist;
+        expect(bot).to.exist
       })
       it('should extend from EventEmitter', function () {
         expect(bot).to.be.an.instanceof(EventEmitter)
@@ -126,25 +124,29 @@ describe('Bot', function () {
       let token = 'foo'
 
       it('should throw an Error when token is missing', function () {
-        let badBot = function () { bot = new Messenger() };
-        expect(badBot).to.throw(Error, 'Facebook Page access token is missing.');
-      });
+        let badBot = function () { bot = new Messenger() }
+        expect(badBot).to.throw(Error, 'Facebook Page access token is missing.')
+      })
+
       it('should store a token of type string', function () {
         let bot = new Messenger(token)
 
         expect(bot.getToken()).to.be.a('string')
-      });
+      })
+
       it('should store "https://graph.facebook.com/v2.6/" in apiUrl in case it was not passed as option', function () {
         let bot = new Messenger(token)
 
         expect(bot.getApiUrl()).to.equal('https://graph.facebook.com/v2.6/')
-      });
+      })
+
       it('should store an optional apiUrl correctly', function () {
         let options = {apiUrl: 'foo'}
         let bot = new Messenger(token, options)
 
         expect(bot.getApiUrl()).to.equal('foo')
-      });
+      })
+
       it('should store "REGULAR" in notif.Type if no optional notif.Type was passed', function () {
         let bot = new Messenger(token)
 
@@ -154,25 +156,28 @@ describe('Bot', function () {
         let options = {notificationType: 'UNSUPPORTED_NOTIFICATION_TYPE'}
         let bot = new Messenger(token, options)
 
-        expect(bot.getNotificationType()).to.equal('REGULAR') 
+        expect(bot.getNotificationType()).to.equal('REGULAR')
       })
+
       it('should store "REGULAR" in notificationType if passed as an option', function () {
         let options = {notificationType: 'REGULAR'}
         let bot = new Messenger(token, options)
 
         expect(bot.getNotificationType()).to.equal('REGULAR')
       })
+
       it('should store "SILENT_PUSH" in notificationType if passed as an option', function () {
         let options = {notificationType: 'SILENT_PUSH'}
         let bot = new Messenger(token, options)
 
         expect(bot.getNotificationType()).to.equal('SILENT_PUSH')
       })
+
       it('should store "NO_PUSH" in notificationType if passed as an option', function () {
         let options = {notificationType: 'NO_PUSH'}
         let bot = new Messenger(token, options)
 
-        expect(bot.getNotificationType()).to.equal('NO_PUSH') 
+        expect(bot.getNotificationType()).to.equal('NO_PUSH')
       })
     })
   })
