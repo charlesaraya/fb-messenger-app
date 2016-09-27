@@ -1,5 +1,7 @@
 'use strict'
 
+const describe = require('mocha').describe
+const it = require('mocha').it
 const expect = require('chai').expect
 const Messenger = require('../bin/app').default
 
@@ -29,16 +31,16 @@ describe('Bot', function () {
       let SenderAction = require('../bin/sender-action').default
 
       it('should store threadSetting object', function () {
-        expect(bot.threadSetting).to.exist;
-        expect(bot.threadSetting).to.be.an.instanceof(ThreadSetting);
+        expect(bot.threadSetting).to.exist
+        expect(bot.threadSetting).to.be.an.instanceof(ThreadSetting)
       })
       it('should store senderAction object', function () {
-        expect(bot.senderAction).to.exist;
-        expect(bot.senderAction).to.be.an.instanceof(SenderAction);
+        expect(bot.senderAction).to.exist
+        expect(bot.senderAction).to.be.an.instanceof(SenderAction)
       })
       it('should store verify object', function () {
-        expect(bot.verify).to.exist;
-        expect(bot.verify).to.be.an('object');
+        expect(bot.verify).to.exist
+        expect(bot.verify).to.be.an('object')
       })
     })
 
@@ -46,93 +48,93 @@ describe('Bot', function () {
       let bot = new Messenger(dummyToken)
 
       it('should have a getToken method', function () {
-        expect(bot.getToken).to.exist;
-        expect(bot.getToken).to.be.a('function');
+        expect(bot.getToken).to.exist
+        expect(bot.getToken).to.be.a('function')
       })
       it('should have a getApiUrl method', function () {
-        expect(bot.getApiUrl).to.exist;
-        expect(bot.getApiUrl).to.be.a('function');
+        expect(bot.getApiUrl).to.exist
+        expect(bot.getApiUrl).to.be.a('function')
       })
       it('should have a getNotificationType method', function () {
-        expect(bot.getNotificationType).to.exist;
-        expect(bot.getNotificationType).to.be.a('function');
+        expect(bot.getNotificationType).to.exist
+        expect(bot.getNotificationType).to.be.a('function')
       })
       it('should have a sendApiMessage method', function () {
-        expect(bot.sendApiMessage).to.exist;
-        expect(bot.sendApiMessage).to.be.a('function');
+        expect(bot.sendApiMessage).to.exist
+        expect(bot.sendApiMessage).to.be.a('function')
       })
       it('should have a subscribeApp method', function () {
-        expect(bot.subscribeApp).to.exist;
-        expect(bot.subscribeApp).to.be.a('function');
+        expect(bot.subscribeApp).to.exist
+        expect(bot.subscribeApp).to.be.a('function')
       })
       it('should have a getUserPsid method', function () {
-        expect(bot.getUserPsid).to.exist;
-        expect(bot.getUserPsid).to.be.a('function');
+        expect(bot.getUserPsid).to.exist
+        expect(bot.getUserPsid).to.be.a('function')
       })
       it('should have a unlinkAccount method', function () {
-        expect(bot.unlinkAccount).to.exist;
-        expect(bot.unlinkAccount).to.be.a('function');
+        expect(bot.unlinkAccount).to.exist
+        expect(bot.unlinkAccount).to.be.a('function')
       })
       it('should have a getUserProfile method', function () {
-        expect(bot.getUserProfile).to.exist;
-        expect(bot.getUserProfile).to.be.a('function');
+        expect(bot.getUserProfile).to.exist
+        expect(bot.getUserProfile).to.be.a('function')
       })
       it('should have a _handleCallback method', function () {
-        expect(bot._handleCallback).to.exist;
-        expect(bot._handleCallback).to.be.a('function');
+        expect(bot._handleCallback).to.exist
+        expect(bot._handleCallback).to.be.a('function')
       })
       it('should have a _handleEvent method', function () {
-        expect(bot._handleEvent).to.exist;
-        expect(bot._handleEvent).to.be.a('function');
+        expect(bot._handleEvent).to.exist
+        expect(bot._handleEvent).to.be.a('function')
       })
       describe('#ThreadSetting', function () {
         it('should have a setGreetingText method', function () {
-          expect(bot.threadSetting.setGreetingText).to.exist;
-          expect(bot.threadSetting.setGreetingText).to.be.a('function');
+          expect(bot.threadSetting.setGreetingText).to.exist
+          expect(bot.threadSetting.setGreetingText).to.be.a('function')
         })
         it('should have a setGetStartedButton method', function () {
-          expect(bot.threadSetting.setGetStartedButton).to.exist;
-          expect(bot.threadSetting.setGetStartedButton).to.be.a('function');
+          expect(bot.threadSetting.setGetStartedButton).to.exist
+          expect(bot.threadSetting.setGetStartedButton).to.be.a('function')
         })
         it('should have a setPersistentMenu method', function () {
-          expect(bot.threadSetting.setPersistentMenu).to.exist;
-          expect(bot.threadSetting.setPersistentMenu).to.be.a('function');
+          expect(bot.threadSetting.setPersistentMenu).to.exist
+          expect(bot.threadSetting.setPersistentMenu).to.be.a('function')
         })
         it('should have a deleteGetStartedButton method', function () {
-          expect(bot.threadSetting.deleteGetStartedButton).to.exist;
-          expect(bot.threadSetting.deleteGetStartedButton).to.be.a('function');
+          expect(bot.threadSetting.deleteGetStartedButton).to.exist
+          expect(bot.threadSetting.deleteGetStartedButton).to.be.a('function')
         })
         it('should have a deletePersistentMenu method', function () {
-          expect(bot.threadSetting.deletePersistentMenu).to.exist;
-          expect(bot.threadSetting.deletePersistentMenu).to.be.a('function');
+          expect(bot.threadSetting.deletePersistentMenu).to.exist
+          expect(bot.threadSetting.deletePersistentMenu).to.be.a('function')
         })
         it('should have a sendSettingRequest method', function () {
-          expect(bot.threadSetting.sendSettingRequest).to.exist;
-          expect(bot.threadSetting.sendSettingRequest).to.be.a('function');
+          expect(bot.threadSetting.sendSettingRequest).to.exist
+          expect(bot.threadSetting.sendSettingRequest).to.be.a('function')
         })
       })
       describe('#SenderAction', function () {
         it('should have a sendMarkSeenInterval method', function () {
-          expect(bot.senderAction.sendMarkSeenInterval).to.exist;
-          expect(bot.senderAction.sendMarkSeenInterval).to.be.a('function');
+          expect(bot.senderAction.sendMarkSeenInterval).to.exist
+          expect(bot.senderAction.sendMarkSeenInterval).to.be.a('function')
         })
         it('should have a sendTypingInterval method', function () {
-          expect(bot.senderAction.sendTypingInterval).to.exist;
-          expect(bot.senderAction.sendTypingInterval).to.be.a('function');
+          expect(bot.senderAction.sendTypingInterval).to.exist
+          expect(bot.senderAction.sendTypingInterval).to.be.a('function')
         })
         it('should have a sendSenderActionRequest method', function () {
-          expect(bot.senderAction.sendSenderActionRequest).to.exist;
-          expect(bot.senderAction.sendSenderActionRequest).to.be.a('function');
+          expect(bot.senderAction.sendSenderActionRequest).to.exist
+          expect(bot.senderAction.sendSenderActionRequest).to.be.a('function')
         })
       })
       describe('#Verify', function () {
         it('should have a webhook method', function () {
-          expect(bot.verify.webhook).to.exist;
-          expect(bot.verify.webhook).to.be.a('function');
+          expect(bot.verify.webhook).to.exist
+          expect(bot.verify.webhook).to.be.a('function')
         })
         it('should have a signature method', function () {
-          expect(bot.verify.signature).to.exist;
-          expect(bot.verify.signature).to.be.a('function');
+          expect(bot.verify.signature).to.exist
+          expect(bot.verify.signature).to.be.a('function')
         })
       })
     })
@@ -142,7 +144,8 @@ describe('Bot', function () {
 
       describe('#token', function () {
         it('should throw an Error when missing', function () {
-          let badBot = function () { bot = new Messenger() }
+          let bot = new Messenger()
+          let badBot = function () { bot }
           expect(badBot).to.throw(Error, 'Facebook Page access token is missing.')
         })
         it('should be of type string', function () {
@@ -151,7 +154,7 @@ describe('Bot', function () {
         })
         it('should store token correctly', function () {
           let bot = new Messenger(token)
-          expect(bot.getToken()).to.equal(token) 
+          expect(bot.getToken()).to.equal(token)
         })
       })
       describe('#apiUrl', function () {

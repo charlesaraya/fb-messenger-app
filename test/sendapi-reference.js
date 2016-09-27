@@ -1,5 +1,7 @@
 'use strict'
 
+const describe = require('mocha').describe
+const it = require('mocha').it
 const expect = require('chai').expect
 const nock = require('nock')
 const Messenger = require('../bin/app').default
@@ -30,8 +32,8 @@ describe('Send API Reference', function () {
         .reply(200, response)
 
       bot.subscribeApp((err, body) => {
-        expect(err).to.be.null;
-        expect(body).to.equal(response);
+        expect(err).to.be.null
+        expect(body).to.equal(response)
       })
     })
 
@@ -51,8 +53,8 @@ describe('Send API Reference', function () {
         .reply(200, response)
 
       bot.getUserPsid('foo', (err, body) => {
-        expect(err).to.be.null;
-        expect(body).to.equal(response);
+        expect(err).to.be.null
+        expect(body).to.equal(response)
       })
     })
 
@@ -68,8 +70,8 @@ describe('Send API Reference', function () {
         .reply(200, response)
 
       bot.unlinkAccount('foo', (err, body) => {
-        expect(err).to.be.null;
-        expect(body).to.equal(response);
+        expect(err).to.be.null
+        expect(body).to.equal(response)
       })
     })
 
@@ -92,8 +94,8 @@ describe('Send API Reference', function () {
         .reply(200, response)
 
       bot.getUserProfile(recipientId, (err, body) => {
-        expect(err).to.be.null;
-        expect(body).to.equal(response);
+        expect(err).to.be.null
+        expect(body).to.equal(response)
       })
     })
 
@@ -111,16 +113,14 @@ describe('Send API Reference', function () {
         .reply(200, error)
 
       bot.getUserProfile(badUserId, (err, body) => {
-        expect(body).to.be.undefined;
-        expect(err).to.equal(error);
+        expect(body).to.be.undefined
+        expect(err).to.equal(error)
       })
     })
   })
 
   describe('#Sender Actions', function () {
-
     it('should send a mark_seen sender action correctly', function () {
-
       payload.sender_action = 'mark_seen'
 
       nock('https://graph.facebook.com')
@@ -131,13 +131,12 @@ describe('Send API Reference', function () {
         .reply(200, response)
 
       bot.senderAction.sendSenderActionRequest(recipientId, 'mark_seen', (err, body) => {
-        expect(err).to.be.null;
-        expect(body).to.equal(response);
+        expect(err).to.be.null
+        expect(body).to.equal(response)
       })
     })
 
     it('should send a typing_on sender action correctly', function () {
-
       payload.sender_action = 'typing_on'
 
       nock('https://graph.facebook.com')
@@ -148,13 +147,12 @@ describe('Send API Reference', function () {
         .reply(200, response)
 
       bot.senderAction.sendSenderActionRequest(recipientId, 'typing_on', (err, body) => {
-        expect(err).to.be.null;
-        expect(body).to.equal(response);
+        expect(err).to.be.null
+        expect(body).to.equal(response)
       })
     })
 
     it('should send a typing_off sender action correctly', function () {
-
       payload.sender_action = 'typing_off'
 
       nock('https://graph.facebook.com')
@@ -165,13 +163,12 @@ describe('Send API Reference', function () {
         .reply(200, response)
 
       bot.senderAction.sendSenderActionRequest(recipientId, 'typing_off', (err, body) => {
-        expect(err).to.be.null;
-        expect(body).to.equal(response);
+        expect(err).to.be.null
+        expect(body).to.equal(response)
       })
     })
 
     it('should return error if sender action type is unsupported', function () {
-
       payload.sender_action = 'unsupported'
       error.message = '(#100) Param sender_action must be one of {MARK_SEEN, TYPING_ON, TYPING_OFF}'
       error.code = 100
@@ -184,16 +181,14 @@ describe('Send API Reference', function () {
         .reply(200, error)
 
       bot.senderAction.sendSenderActionRequest(recipientId, 'unsupported', (err, body) => {
-        expect(err).to.equal(error);
-        expect(body).to.be(undefined);
+        expect(err).to.equal(error)
+        expect(body).to.be(undefined)
       })
     })
   })
 
   describe('#Text Message', function () {
-
     it('should send a text message correctly', function () {
-
       payload.message = { text: 'Hello World!' }
 
       nock('https://graph.facebook.com')
@@ -204,8 +199,8 @@ describe('Send API Reference', function () {
         .reply(200, response)
 
       bot.sendApiMessage(recipientId, { text: 'Hello World!' }, (err, body) => {
-        expect(err).to.be.null;
-        expect(body).to.equal(response);
+        expect(err).to.be.null
+        expect(body).to.equal(response)
       })
     })
 
@@ -222,8 +217,8 @@ describe('Send API Reference', function () {
         .reply(200, error)
 
       bot.sendApiMessage(recipientId, { text: 'Hello World!' }, (err, body) => {
-        expect(body).to.be.undefined;
-        expect(err).to.equal(error);
+        expect(body).to.be.undefined
+        expect(err).to.equal(error)
       })
     })
 
@@ -248,16 +243,14 @@ describe('Send API Reference', function () {
         .reply(200, error)
 
       bot.sendApiMessage(recipientId, payload.message, (err, body) => {
-        expect(body).to.be.undefined;
-        expect(err).to.equal(error);
+        expect(body).to.be.undefined
+        expect(err).to.equal(error)
       })
     })
   })
 
   describe('#Image Message', function () {
-
     it('should send an image attachment message correctly', function () {
-
       payload.message = {
         attachment: {
           type: 'image',
@@ -275,8 +268,8 @@ describe('Send API Reference', function () {
         .reply(200, response)
 
       bot.sendApiMessage(recipientId, payload.message, (err, body) => {
-        expect(err).to.be.null;
-        expect(body).to.equal(response);
+        expect(err).to.be.null
+        expect(body).to.equal(response)
       })
     })
 
@@ -300,8 +293,8 @@ describe('Send API Reference', function () {
         .reply(200, error)
 
       bot.sendApiMessage(recipientId, payload.message, (err, body) => {
-        expect(body).to.be.undefined;
-        expect(err).to.equal(error);
+        expect(body).to.be.undefined
+        expect(err).to.equal(error)
       })
     })
 
@@ -325,16 +318,14 @@ describe('Send API Reference', function () {
         .reply(200, error)
 
       bot.sendApiMessage(recipientId, payload.message, (err, body) => {
-        expect(body).to.be.undefined;
-        expect(err).to.equal(error);
+        expect(body).to.be.undefined
+        expect(err).to.equal(error)
       })
     })
   })
 
   describe('#Audio Message', function () {
-
     it('should send an audio attachment message correctly', function () {
-
       payload.message = {
         attachment: {
           type: 'audio',
@@ -352,8 +343,8 @@ describe('Send API Reference', function () {
         .reply(200, response)
 
       bot.sendApiMessage(recipientId, payload.message, (err, body) => {
-        expect(err).to.be.null;
-        expect(body).to.equal(response);
+        expect(err).to.be.null
+        expect(body).to.equal(response)
       })
     })
 
@@ -377,16 +368,14 @@ describe('Send API Reference', function () {
         .reply(200, error)
 
       bot.sendApiMessage(recipientId, payload.message, (err, body) => {
-        expect(body).to.be.undefined;
-        expect(err).to.equal(error);
+        expect(body).to.be.undefined
+        expect(err).to.equal(error)
       })
     })
   })
 
   describe('#Video Message', function () {
-
     it('should send a video attachment message correctly', function () {
-
       payload.message = {
         attachment: {
           type: 'video',
@@ -404,16 +393,14 @@ describe('Send API Reference', function () {
         .reply(200, response)
 
       bot.sendApiMessage(recipientId, payload.message, (err, body) => {
-        expect(err).to.be.null;
-        expect(body).to.equal(response);
+        expect(err).to.be.null
+        expect(body).to.equal(response)
       })
     })
   })
 
   describe('#File Message', function () {
-
     it('should send a file attachment message correctly', function () {
-
       payload.message = {
         attachment: {
           type: 'file',
@@ -431,8 +418,8 @@ describe('Send API Reference', function () {
         .reply(200, response)
 
       bot.sendApiMessage(recipientId, payload.message, (err, body) => {
-        expect(err).to.be.null;
-        expect(body).to.equal(response);
+        expect(err).to.be.null
+        expect(body).to.equal(response)
       })
     })
   })
