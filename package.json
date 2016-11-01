@@ -4,9 +4,9 @@
   "description": "NodeJS API adapter for Messenger Platform",
   "main": "bin/app.js",
   "scripts": {
-    "standard": "standard lib/app.js",
-    "test": "mocha test/*.js",
-    "build": "babel lib -d bin"
+    "test": "standard lib/app.js && mocha test/*.js",
+    "compile:es6": "babel lib -d bin",
+    "compile": "npm run compile:es6"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",
