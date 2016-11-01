@@ -1,22 +1,19 @@
 {
   "name": "fb-messenger-app",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "description": "NodeJS API adapter for Messenger Platform",
   "main": "bin/app.js",
   "scripts": {
     "pretest": "npm run clean && npm run compile",
     "test": "standard lib/app.js && mocha test/*.js",
-
     "compile:es6": "babel lib -d bin",
     "compile": "npm run compile:es6",
     "clean": "rimraf bin/*",
-
     "release:commit": "git add CHANGELOG.md && git commit -m \"update CHANGELOG\"",
     "release:push": "git push origin && git push origin --tags",
     "release:major": "changelog -M && npm run release:commit && npm version major && npm run release:push",
     "release:minor": "changelog -m && npm run release:commit && npm version minor && npm run release:push",
     "release:patch": "changelog -p && npm run release:commit && npm version patch && npm run release:push",
-
     "push:git": "git push --tags origin HEAD:master"
   },
   "devDependencies": {
