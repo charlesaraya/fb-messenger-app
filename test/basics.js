@@ -144,8 +144,7 @@ describe('Bot', function () {
 
       describe('#token', function () {
         it('should throw an Error when missing', function () {
-          let bot = new Messenger()
-          let badBot = function () { bot }
+          let badBot = function () { return new Messenger() }
           expect(badBot).to.throw(Error, 'Facebook Page access token is missing.')
         })
         it('should be of type string', function () {
