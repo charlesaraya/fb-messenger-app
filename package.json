@@ -4,8 +4,9 @@
   "description": "NodeJS API adapter for Messenger Platform",
   "main": "bin/app.js",
   "scripts": {
-    "pretest": "npm run clean && npm run compile",
-    "test": "standard lib/app.js && mocha test/*.js",
+    "lint": "standard lib/*.js",
+    "pretest": "npm run lint && npm run clean && npm run compile",
+    "test": "mocha test/*.js",
     "compile:es6": "babel lib -d bin",
     "compile": "npm run compile:es6",
     "clean": "rimraf bin/*",
