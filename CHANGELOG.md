@@ -1,3 +1,9 @@
+#### 4.2.6 (2016-11-2)
+
+##### Other Changes
+
+* **package.json:** delete push:git script. push will be done through release:* scripts ([aaba7141](https://github.com/charlesaraya/fb-messenger-app/commit/aaba7141708daab6b1484957d563cc8bfbeaf63d))
+
 #### 4.2.5 (2016-11-2)
 
 ##### Other Changes
