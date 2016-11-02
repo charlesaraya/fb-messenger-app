@@ -1,3 +1,11 @@
+#### 4.2.5 (2016-11-2)
+
+##### Other Changes
+
+* **package:**
+  * clean the bin directory completely instead of just the files in it ([6bfab2d2](https://github.com/charlesaraya/fb-messenger-app/commit/6bfab2d20e2f339c214d17ec96227b475b97831d))
+  * clean the bin directory with all compiled es6 source code in lib after test ([fb2f14c5](https://github.com/charlesaraya/fb-messenger-app/commit/fb2f14c590fddf89f707f6eb00bacccac57014e0))
+
 #### 4.2.4 (2016-11-2)
 
 #### 4.2.3 (2016-11-2)
