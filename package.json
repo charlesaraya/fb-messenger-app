@@ -15,8 +15,7 @@
     "release:push": "git push origin && git push origin --tags",
     "release:major": "changelog -M && npm run release:commit && npm version major && npm run release:push",
     "release:minor": "changelog -m && npm run release:commit && npm version minor && npm run release:push",
-    "release:patch": "changelog -p && npm run release:commit && npm version patch && npm run release:push",
-    "push:git": "git push --tags origin HEAD:master"
+    "release:patch": "changelog -p && npm run release:commit && npm version patch && npm run release:push"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",
